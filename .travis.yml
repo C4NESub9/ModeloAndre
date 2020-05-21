@@ -3,14 +3,14 @@ sudo: required
 dist: trusty
 
 before_install:
-  - sudo add-apt-repository --yes ppa:beineri/opt-qtQt 514-trusty
+  - sudo add-apt-repository ppa:beineri/opt-qt-5.11.1-trusty
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install qt514[QTPACKAGE]
+  - sudo apt-get -y install qt511[QTPACKAGE]
 
 script:
-  - source /opt/qt514/bin/qt514-env.sh
+  - source /opt/qt511/bin/qt511-env.sh
   - qmake Covid_19_console.pro
   - make
   - ./Covid_19_console
