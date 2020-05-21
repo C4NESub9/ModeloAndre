@@ -1,4 +1,4 @@
-language: c++
+language: python
 sudo: required
 dist: trusty
 
@@ -9,9 +9,9 @@ before_install:
  - sudo apt-get install qt5-default qttools5-dev-tools
 
 install:
-  - python -m pip install --upgrade pip
-  - python -m pip install --user yagmail 
-  - python -m pip install --user csv
+  - python -m pip install pip
+  - python -m pip install yagmail 
+  - python -m pip install csv
 
 script:
   - python dataConverter.py  
