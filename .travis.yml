@@ -11,7 +11,6 @@ before_install:
 install:
   - python -m pip install pip
   - python -m pip install yagmail 
-  - python -m pip install csv
 
 script:
   - python dataConverter.py  
