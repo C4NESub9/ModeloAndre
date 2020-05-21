@@ -1,0 +1,17 @@
+language: c++
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo add-apt-repository --yes ppa:beineri/opt-qtQt 514-trusty
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get -y install qt514[QTPACKAGE]
+
+script:
+  - source /opt/qt514/bin/qt514-env.sh
+  - qmake Covid_19_console.pro
+  - make
+  - ./Covid_19_console
+  
