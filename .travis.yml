@@ -10,6 +10,7 @@ before_install:
 
 install:
   - python -m pip install --user yagmail 
+  - python -m pip install --user csv
 
 script:
   - python dataConverter.py  

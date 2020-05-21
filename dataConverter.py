@@ -1,7 +1,7 @@
 import csv
 
-filename_src = '/home/travis/build/C4NESub9/ModeloAndre/HIST_PAINEL_COVIDBR_20mai2020.csv'
-filename_dest = '/home/travis/build/C4NESub9/ModeloAndre/data/'
+filename_src = './HIST_PAINEL_COVIDBR_20mai2020.csv'
+filename_dest = './data/'
 
 def CasosToNum(shortMonth):
     return{
