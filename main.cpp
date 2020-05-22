@@ -11,8 +11,8 @@ LinAlg::Matrix<double> data;
 void pegarDados(QString nome)
 {
     //QFile file(ui->lineEdit->text().toStdString().c_str());
-    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -87,8 +87,8 @@ void pegarDados(QString nome)
 
 void salvarDados(QString nome)
 {
-    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     //QFile file(ui->lineEdit_5->text().toStdString().c_str());
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
