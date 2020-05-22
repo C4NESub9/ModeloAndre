@@ -18,6 +18,7 @@ def copiarPastas(src,dest):
 
 os.system('cd /home/travis/build/C4NESub9/ \n  git clone https://neurodeveloperISD:,Lc258147@github.com/C4NESub9/googleData.git')
 copiarPastas('/home/travis/build/C4NESub9/ModeloAndre/dataAn/','/home/travis/build/C4NESub9/googleData/dataAn/')
+copiarPastas('/home/travis/build/C4NESub9/ModeloAndre/data/','/home/travis/build/C4NESub9/googleData/data/')
 os.system('cd /home/travis/build/C4NESub9/googleData/ \n git remote set-url origin https://neurodeveloperISD:,Lc258147@github.com/C4NESub9/googleData.git \n git add . \n git commit -m "Atualizacao dos dados" \n git push')
 
 
