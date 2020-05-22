@@ -26,11 +26,11 @@ def ReadAllCsvFromFolder(src,dest):
                         daysFuture = 1
                         for row in reader_dest:
                             if i < len(listasrc):
-                                lista.append([listasrc[i], row[0], row[1]])
+                                lista.append([listasrc[i], row[1], row[0]])
                                 i = i+1
                             else:
                                 date = datetime.strptime(listasrc[i-1], '%Y-%m-%d').date() + timedelta(days=daysFuture)
-                                lista.append(["'"+date.strftime('%Y-%m-%d')+"'", '+', row[1]])
+                                lista.append(["'"+date.strftime('%Y-%m-%d')+"'", row[1]], '+')
                                 daysFuture = daysFuture + 1
                 with open(dest + splitedFinename[0] +'P.'+ splitedFinename[1], "w", encoding="utf8", newline="") as edge_file:
                     writer = csv.writer(edge_file, delimiter=",")
