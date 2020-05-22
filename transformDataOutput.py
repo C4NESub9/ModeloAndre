@@ -30,12 +30,12 @@ def ReadAllCsvFromFolder(src,dest):
                                 i = i+1
                             else:
                                 date = datetime.strptime(listasrc[i-1], '%Y-%m-%d').date() + timedelta(days=daysFuture)
-                                lista.append(["'"+date.strftime('%Y-%m-%d')+"'", row[1]], '+')
+                                lista.append(["'"+date.strftime('%Y-%m-%d')+"'", row[1], '+'])
                                 daysFuture = daysFuture + 1
                 with open(dest + splitedFinename[0] +'P.'+ splitedFinename[1], "w", encoding="utf8", newline="") as edge_file:
                     writer = csv.writer(edge_file, delimiter=",")
                     for row in lista:
-                        writer.writerow(["'"+row[0]+"'",row[1],row[2]])
+                        writer.writerow([row[0],row[1],row[2]])
                 #print(lista)
                             
     return lista
