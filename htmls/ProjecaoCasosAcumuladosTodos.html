@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(processData);
+
+        function processData() {
+
+            var urlBaseDados     = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/data/'
+            var urlBaseProjecoes = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAn/'
+            requestData9(
+                urlBaseProjecoes.concat('CAAiL_AnP.csv'),
+                urlBaseProjecoes.concat('CABiA_AnP.csv'),
+                urlBaseProjecoes.concat('CACiE_AnP.csv'),
+                urlBaseProjecoes.concat('CAMiA_AnP.csv'),
+                urlBaseProjecoes.concat('CAPiB_AnP.csv'),
+                urlBaseProjecoes.concat('CAPiE_AnP.csv'),
+                urlBaseProjecoes.concat('CAPiI_AnP.csv'),
+                urlBaseProjecoes.concat('CARiN_AnP.csv'),
+                urlBaseProjecoes.concat('CASiE_AnP.csv')
+            ).then(response => {
+                var variable = 'Projeção dos modelos Para Casos Acumulados de Todos os Estados';
+                var areas = ['Alagoas', 'Bahia', 'Ceará', 'Maranhão', 'Paraíba', 'Pernambuco', 'Piauí', 'Rio Grande do Norte', 'Sergipe'];
+                var start = defineDate(8, 3, 2020);
+                var period = 83
+
+                var data = assignInformation9(response, variable, areas);
+                var table = mountTableByVariable(data, variable, areas, start, period);
+                plotDataLineChart(table, 'chart_div', variable)
+
+            });
+            
+            function plotDataLineChart(data, element, title) {
+                var options = { title: title };
+                var chartDiv = document.getElementById(element);
+                var table = new google.visualization.DataTable(data);
+                var view = new google.visualization.DataView(table);
+                var chart = new google.visualization.LineChart(chartDiv);
+                chart.draw(view, options);
+            }
+        }
+
+</script>
+</head>
+
+<body>
+    <div id="chart_div" style="width: 480px; height: 320px;"></div>
+</body>
+
+</html>

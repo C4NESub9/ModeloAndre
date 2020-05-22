@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://alexjavarotti.github.io/library/data.normalization.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+        google.charts.setOnLoadCallback(processData);
+
+        function processData() {
+
+            var urlBaseDados     = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/data/'
+            var urlBaseProjecoes = 'https://raw.githubusercontent.com/C4NESub9/googleData/master/dataAn/'
+            requestData9(
+                urlBaseDados.concat('OAAiL_An.csv'),
+                urlBaseProjecoes.concat('OAAiL_AnP.csv')
+            ).then(response => {
+                var variable = 'Comparação de Modelo X Óbitos Acumulados Reais \ncom Projeção de 7 dias Para o Estado de Alagoas';
+                var areas = ['Dados', 'Projeções'];
+                var start = defineDate(8, 3, 2020);
+                var period = 83
+
+                var data = assignInformation9(response, variable, areas);
+                var table = mountTableByVariable(data, variable, areas, start, period);
+                plotDataLineChart(table, 'chart_div', variable)
+
+            });
+            
+            function plotDataLineChart(data, element, title) {
+                var options = { title: title };
+                var chartDiv = document.getElementById(element);
+                var table = new google.visualization.DataTable(data);
+                var view = new google.visualization.DataView(table);
+                var chart = new google.visualization.LineChart(chartDiv);
+                chart.draw(view, options);
+            }
+        }
+
+</script>
+</head>
+
+<body>
+    <div id="chart_div" style="width: 480px; height: 320px;"></div>
+</body>
+
+</html>
