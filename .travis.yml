@@ -18,6 +18,7 @@ script:
   - qmake Covid_19_console.pro
   - make
   - ./Covid_19_console
+  - python transformDataOutput.py  
   - python sendEmail.py  
   
   
