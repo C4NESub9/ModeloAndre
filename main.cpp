@@ -105,7 +105,7 @@ void salvarDados(QString nome)
     file.close();
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     //QCoreApplication a(argc, argv);
     QString estados[9] = {"AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"};
