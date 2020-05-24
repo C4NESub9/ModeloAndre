@@ -30,7 +30,7 @@ def getFilename(src):
     src_files = os.listdir(src)
     filename_src = './dataRaw/'
     for file_name in src_files:
-        file_name = csv_from_excel(filename_src + file_name)
+        file_name = csv_from_excel('/home/travis/Downloads' + file_name)
         filename_src = filename_src + file_name
     return filename_src
 
