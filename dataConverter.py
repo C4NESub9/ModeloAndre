@@ -11,6 +11,7 @@ def csv_from_excel(xlsxFile):
     splitedFinename = splitedFinename.split('/')[-1]
 
     sh = wb.sheet_by_name(splitedFinename)
+    splitedFinename = xlsxFile.split('.')
     your_csv_file = open(splitedFinename + '.csv', 'w')
     wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
 
