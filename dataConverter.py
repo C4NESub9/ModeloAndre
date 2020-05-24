@@ -28,10 +28,10 @@ def copiarPastas(src,dest):
 
 def getFilename(src):
     src_files = os.listdir(src)
-    filename_src = './dataRaw/'
+    filename_src = ''
     for file_name in src_files:
-        file_name = csv_from_excel('/home/travis/Downloads' + file_name)
-        filename_src = filename_src + file_name
+        file_name = csv_from_excel(src + file_name)
+        filename_src = src + file_name
     return filename_src
 
 def CasosToNum(shortMonth):
