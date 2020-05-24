@@ -38,7 +38,7 @@ void pegarDados(QString nome)
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
     LinAlg::Matrix<double> Output = matrix;
 
-    arx = new ModelHandler::ARX<double>(0,2);
+    arx = new ModelHandler::ARX<double>(0,3);
     //LS = new OptimizationHandler::LeastSquare<double>(arx);
     //LS->Optimize(Input,Output);
     //std::cout << arx->getModelCoef();
@@ -58,6 +58,7 @@ void pegarDados(QString nome)
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
+    std::cout << arx->print() << std::endl;
 }
 
 void salvarDados(QString nome)
