@@ -38,7 +38,7 @@ void pegarDados(QString nome)
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
     LinAlg::Matrix<double> Output = matrix;
 
-    arx = new ModelHandler::ARX<double>(0,3);
+    arx = new ModelHandler::ARX<double>(0,2);
     //LS = new OptimizationHandler::LeastSquare<double>(arx);
     //LS->Optimize(Input,Output);
     //std::cout << arx->getModelCoef();
