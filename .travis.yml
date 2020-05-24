@@ -9,7 +9,7 @@ before_install:
  - sudo apt-get install qt5-default qttools5-dev-tools
  - wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
 
- - unzip chromedriver_linux64.zip -d /home/travis/virtualenv/python3.6.3
+ - unzip chromedriver_linux64.zip -d /home/travis/C4NESub9/ModeloAndre/
 
  - export CHROME_BIN=chromium-browser
 
