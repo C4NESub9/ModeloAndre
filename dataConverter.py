@@ -2,30 +2,37 @@ import csv, os
 import shutil
 import xlrd
 
+xlxsDir = 'C:/Users/andre/Downloads/'
+#xlxsDir = '/home/travis/Downloads'
 filename_src = './dataRaw/'
 filename_dest = './data/'
 
 def csv_from_excel(xlsxFile):
     wb = xlrd.open_workbook(xlsxFile)
-    splitedFinename = xlsxFile.split('.')
-    splitedFinename = splitedFinename.split('/')[-1]
+    splitedFinenameFromExtension = xlsxFile.split('.')
+    splitedFinename = splitedFinenameFromExtension[0].split('/')
+    splitedFinename = splitedFinename[-1]
 
-    sh = wb.sheet_by_name(splitedFinename)
-    splitedFinename = xlsxFile.split('.')
-    your_csv_file = open(splitedFinename + '.csv', 'w')
-    wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+    sh = wb.sheet_by_name('Sheet 1')
+    #splitedFinename = xlsxFile.split('.')
+    your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
+    wr = csv.writer(your_csv_file,delimiter=";")
 
     for rownum in range(sh.nrows):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
-    return splitedFinename + '.csv'
+    return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
-    for file_name in src_files:
-        if os.path.isfile(src  + file_name):
-            shutil.copy(src + file_name, dest)
+    if os.path.isfile(src  + src_files[0]):
+        newsrc = csv_from_excel(src + src_files[0])
+        shutil.copy(newsrc, dest)
+        splitedFinename = newsrc.split('/')
+        src_files[0] = splitedFinename[-1]
+
+    return dest + src_files[0]
 
 def getFilename(src):
     src_files = os.listdir(src)
@@ -91,8 +98,7 @@ def runAll(state,legend):
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
 
 
-copiarPastas('/home/travis/Downloads','./dataRaw/')
-filename_src = getFilename('/home/travis/Downloads')
+filename_src = copiarPastas(xlxsDir,filename_src)
 
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
