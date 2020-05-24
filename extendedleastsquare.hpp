@@ -47,7 +47,7 @@ void OptimizationHandler::ExtendedLeastSquare<Type>::Optimize(LinAlg::Matrix<Typ
         for(uint8_t j = 0; j < this->ny; ++j )
             Fi = Fi| (-(~Output(0,from(this->ny-j)-->Output.getNumberOfColumns()-1-j-ny)));
         for(uint8_t j = 0; j < this->ne; ++j )
-            Fi = Fi| (~e(0,from(this->ne-j)-->e.getNumberOfColumns()-1-j-ny));
+            Fi = Fi| (~e(0,from(this->ne-j+1)-->e.getNumberOfColumns()-j-ny));
 
         std::cout << Fi;
         //Fi = (~Fi);

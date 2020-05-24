@@ -12,6 +12,7 @@ def copiarPastas(src,dest):
 
 def getFilename(src):
     src_files = os.listdir(src)
+    filename_src = './dataRaw/'
     for file_name in src_files:
         filename_src = filename_src + file_name
     return filename_src
