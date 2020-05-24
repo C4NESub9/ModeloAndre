@@ -18,7 +18,7 @@ install:
   - python -m pip install yagmail 
 
 script:
-  - downloadfromMS.py
+  - python downloadfromMS.py
   - python dataConverter.py  
   - qmake -project
   - qmake Covid_19_console.pro
