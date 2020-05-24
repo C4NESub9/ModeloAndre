@@ -1,19 +1,6 @@
 from selenium import webdriver
 import time
 
-SELENIUM_WEBDRIVERS = {
-	'default': {
-		'callable': webdriver.Chrome,
-		'args': (),
-		'kwargs': {},
-	},
-	'firefox': {
-		'callable': webdriver.Firefox,
-		'args': (),
-		'kwargs': {},
-	},
-}
-
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
 options.add_argument("--test-type")
