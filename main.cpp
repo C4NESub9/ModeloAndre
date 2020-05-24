@@ -12,8 +12,8 @@ LinAlg::Matrix<double> data;
 
 void pegarDados(QString nome)
 {
-    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -39,15 +39,15 @@ void pegarDados(QString nome)
     LinAlg::Matrix<double> Output = matrix;
 
     arx = new ModelHandler::ARX<double>(0,2);
-//    LS = new OptimizationHandler::LeastSquare<double>(arx);
-//    LS->Optimize(Input,Output);
-    ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
-    ELS->Optimize(Input,Output);
+    LS = new OptimizationHandler::LeastSquare<double>(arx);
+    LS->Optimize(Input,Output);
+//    ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
+//    ELS->Optimize(Input,Output);
 
-    arx->setInitialOutputValue(Output(0,0));
+    //arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 1; i < counter; ++i)
-        estOutput(0,i) = int(arx->sim(0,Output(0,i-1)));
+        estOutput(0,i) = (arx->sim(0,Output(0,i-1)));
 
     double temp = estOutput(0,counter-1);
     LinAlg::Matrix<double> predictOutput(1,7);
@@ -56,13 +56,13 @@ void pegarDados(QString nome)
         predictOutput(0,i) = temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    std::cout << data << std::endl;
+    //std::cout << data << std::endl;
 }
 
 void salvarDados(QString nome)
 {
-    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 
