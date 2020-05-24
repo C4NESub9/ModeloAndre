@@ -1,5 +1,5 @@
 from selenium import webdriver
-import time
+import time, os
 
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
@@ -14,3 +14,5 @@ time.sleep(10)
 fi = python_button[3].click()
 time.sleep(10)
 driver.quit()
+
+ os.system('cd /home/travis/Downloads \n ls')
