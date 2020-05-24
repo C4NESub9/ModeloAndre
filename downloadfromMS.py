@@ -17,7 +17,7 @@ SELENIUM_WEBDRIVERS = {
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-certificate-errors')
 options.add_argument("--test-type")
-driver = webdriver.Chrome(options=options,executable_path='/home/travis/virtualenv/python3.6.3/bin/')
+driver = webdriver.Chrome(options=options,executable_path='/home/travis/build/C4NESub9/ModeloAndre/')
 driver.get('https://covid.saude.gov.br/')
 
 python_button = driver.find_elements_by_tag_name("ION-BUTTON")
