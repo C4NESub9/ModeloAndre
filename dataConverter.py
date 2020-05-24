@@ -63,8 +63,8 @@ def writeDataCsV(filename_dest,data,tipo,state,complement):
 
 def splitData(filename_src,data):
     Dict_data = dict()
-    filename_src = filename_src.split('.')
-    with open(filename_src[0] + '.csv', "r", encoding="utf8", newline="") as f:
+    #filename_src = filename_src.split('.')
+    with open(filename_src, "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f,delimiter=";")
         for row in reader:
             Dict_data.setdefault(row[1],[]).append ([ row[7],row[CasosToNum(data)] ]) 
