@@ -1,7 +1,13 @@
-import csv
+import csv, os
+import shutil
 
 filename_src = './dataRaw/HIST_PAINEL_COVIDBR_22mai2020.csv'
 filename_dest = './data/'
+
+def getFilename():
+    src_files = os.listdir('/home/travis/Downloads')
+    for file_name in src_files:
+        filename_src = '/home/travis/Downloads'+src_files
 
 def CasosToNum(shortMonth):
     return{
