@@ -34,7 +34,9 @@ HEADERS += \
     SistemasdeControle/src/optimizationLibs/recursiveleastsquare.hpp \
     SistemasdeControle/src/primitiveLibs/LinAlg/linalg.hpp \
     SistemasdeControle/src/primitiveLibs/LinAlg/matrix.hpp \
-    SistemasdeControle/src/primitiveLibs/polynom.hpp \
+    SistemasdeControle/src/primitiveLibs/polynom.hpp \ \
+    extendedleastsquare.h \
+    extendedleastsquare.hpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

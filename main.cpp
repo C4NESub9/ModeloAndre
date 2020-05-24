@@ -1,17 +1,19 @@
 //#include <QCoreApplication>
 #include "SistemasdeControle/headers/optimizationLibs/leastsquare.h"
+#include "extendedleastsquare.h"
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
 
 ModelHandler::ARX<double> *arx;
 OptimizationHandler::LeastSquare<double> *LS;
+OptimizationHandler::ExtendedLeastSquare<double> *ELS;
 LinAlg::Matrix<double> data;
 
 void pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -37,8 +39,10 @@ void pegarDados(QString nome)
     LinAlg::Matrix<double> Output = matrix;
 
     arx = new ModelHandler::ARX<double>(0,2);
-    LS = new OptimizationHandler::LeastSquare<double>(arx);
-    LS->Optimize(Input,Output);
+//    LS = new OptimizationHandler::LeastSquare<double>(arx);
+//    LS->Optimize(Input,Output);
+    ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
+    ELS->Optimize(Input,Output);
 
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
@@ -52,16 +56,15 @@ void pegarDados(QString nome)
         predictOutput(0,i) = temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    std::cout << data << std::endl;
 }
 
 void salvarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
-    //QFile file(ui->lineEdit_5->text().toStdString().c_str());
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
-    //ui->textEdit->append("\n\nDados Salvos!!!\n\n");
 
     QTextStream stream(&file);
     stream << "Saida,Saida_Estimada,Erro\n";
@@ -76,8 +79,7 @@ void salvarDados(QString nome)
 
 int main()
 {
-    //QCoreApplication a(argc, argv);
-    QString estados[9] = {"AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"};
+   QString estados[9] = {"AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"};
     QString tipoDados[2] = {"CA","OA"};
 
     for(uint8_t i = 0; i < 2; ++i)

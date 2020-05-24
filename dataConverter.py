@@ -1,6 +1,6 @@
 import csv
 
-filename_src = './dataRaw/HIST_PAINEL_COVIDBR_21mai2020.csv'
+filename_src = './dataRaw/HIST_PAINEL_COVIDBR_22mai2020.csv'
 filename_dest = './data/'
 
 def CasosToNum(shortMonth):
