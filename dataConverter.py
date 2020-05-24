@@ -1,13 +1,20 @@
 import csv, os
 import shutil
 
-filename_src = './dataRaw/HIST_PAINEL_COVIDBR_22mai2020.csv'
+filename_src = './dataRaw/'
 filename_dest = './data/'
 
-def getFilename():
-    src_files = os.listdir('/home/travis/Downloads')
+def copiarPastas(src,dest):
+    src_files = os.listdir(src)
     for file_name in src_files:
-        filename_src = '/home/travis/Downloads' + file_name
+        if os.path.isfile(src  + file_name):
+            shutil.copy(src + file_name, dest)
+
+def getFilename(src):
+    src_files = os.listdir(src)
+    for file_name in src_files:
+        filename_src = filename_src + file_name
+    return filename_src
 
 def CasosToNum(shortMonth):
     return{
@@ -65,7 +72,8 @@ def runAll(state,legend):
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
 
 
-getFilename()
+copiarPastas('/home/travis/Downloads','./dataRaw/')
+filename_src = getFilename('/home/travis/Downloads')
 
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
