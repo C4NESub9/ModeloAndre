@@ -16,6 +16,7 @@ before_install:
 install:
   - python -m pip install pip
   - python -m pip install yagmail 
+  - python -m pip install selenium
 
 script:
   - python downloadfromMS.py
