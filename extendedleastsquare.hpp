@@ -34,7 +34,7 @@ void OptimizationHandler::ExtendedLeastSquare<Type>::Optimize(LinAlg::Matrix<Typ
         e(0,j) = Output(0,j-1)-yest(0,j);
 
     std::cout << this->model->getModelCoef() << std::endl;
-    //std::cout << (~e) << std::endl;
+    std::cout << (~e) << std::endl;
     LinAlg::Matrix<Type> yMQ = yest;
 
     LinAlg::Matrix<Type> MQEModelCoef;

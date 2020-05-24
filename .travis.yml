@@ -23,7 +23,8 @@ before_install:
 install:
   - python -m pip install pip
   - python -m pip install yagmail 
-  - python -m pip install selenium
+  - python -m pip install selenium	
+  - python -m pip install xlrd
 
 script:
   - python downloadfromMS.py

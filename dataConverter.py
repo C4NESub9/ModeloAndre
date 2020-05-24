@@ -1,8 +1,24 @@
 import csv, os
 import shutil
+import xlrd
 
 filename_src = './dataRaw/'
 filename_dest = './data/'
+
+def csv_from_excel(xlsxFile):
+    wb = xlrd.open_workbook(xlsxFile)
+    splitedFinename = xlsxFile.split('.')
+    splitedFinename = splitedFinename.split('/')[-1]
+
+    sh = wb.sheet_by_name(splitedFinename)
+    your_csv_file = open(splitedFinename + '.csv', 'w')
+    wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+
+    for rownum in range(sh.nrows):
+        wr.writerow(sh.row_values(rownum))
+
+    your_csv_file.close()
+    return splitedFinename + '.csv'
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
@@ -14,6 +30,7 @@ def getFilename(src):
     src_files = os.listdir(src)
     filename_src = './dataRaw/'
     for file_name in src_files:
+        file_name = csv_from_excel(filename_src + file_name)
         filename_src = filename_src + file_name
     return filename_src
 
