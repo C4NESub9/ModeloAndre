@@ -30,6 +30,8 @@ def copiarPastas(src,dest):
     src_files = os.listdir(src)
     if os.path.isfile(src  + src_files[0]):
         newsrc = csv_from_excel(src + src_files[0])
+        print(newsrc)
+        print(src_files[0])
         shutil.copy(newsrc, dest)
         splitedFinename = newsrc.split('/')
         src_files[0] = splitedFinename[-1]
