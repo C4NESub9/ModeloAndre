@@ -2,8 +2,8 @@ import csv, os
 import shutil
 import xlrd
 
-#xlxsDir = 'C:/Users/andre/Downloads/'
-xlxsDir = '/home/travis/Downloads'
+xlxsDir = 'C:/Users/andre/Downloads/'
+#xlxsDir = '/home/travis/Downloads'
 filename_src = './dataRaw/'
 filename_dest = './data/'
 
@@ -15,7 +15,6 @@ def csv_from_excel(xlsxFile):
 
     sh = wb.sheet_by_name('Sheet 1')
     #splitedFinename = xlsxFile.split('.')
-    print('CSV_from_Excel'+splitedFinenameFromExtension[0])
     your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
     wr = csv.writer(your_csv_file,delimiter=";")
 
@@ -23,15 +22,12 @@ def csv_from_excel(xlsxFile):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
-    print(splitedFinenameFromExtension[0] + '.csv')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
-     print('Source FIles'+ src_files)
-    if os.path.isfile(src  + src_files[1]):
-        newsrc = csv_from_excel(src + src_files[1])
-        print('CopiarNewscr'+newsrc)
+    if os.path.isfile(src  + src_files[0]):
+        newsrc = csv_from_excel(src + src_files[0])
         shutil.copy(newsrc, dest)
         splitedFinename = newsrc.split('/')
         src_files[0] = splitedFinename[-1]
