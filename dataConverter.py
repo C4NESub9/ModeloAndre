@@ -101,7 +101,7 @@ def runAll(state,legend):
 
 filename_src = copiarPastas(xlxsDir,filename_src)
 os.system('cd /home/travis/Downloads \n ls')
-os.system('cd ' + filename_src ' \n ls')
+os.system('cd ' + filename_src + ' \n ls')
 
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
