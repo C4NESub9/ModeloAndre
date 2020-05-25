@@ -22,13 +22,14 @@ def csv_from_excel(xlsxFile):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
-    os.system('cd /home/travis/Downloads \n ls')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
     if os.path.isfile(src  + src_files[0]):
+        os.system('cd /home/travis/Downloads \n ls')
         newsrc = csv_from_excel(src + src_files[0])
+        os.system('cd /home/travis/Downloads \n ls')
         shutil.copy(newsrc, dest)
         splitedFinename = newsrc.split('/')
         src_files[0] = splitedFinename[-1]
