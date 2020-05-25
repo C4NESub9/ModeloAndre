@@ -14,4 +14,4 @@ fi = python_button[3].click()
 time.sleep(30)
 driver.quit()
 
-#os.system('cd /home/travis/Downloads \n ls')
+os.system('cd /home/travis/Downloads \n ls')
