@@ -22,6 +22,7 @@ def csv_from_excel(xlsxFile):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
+    os.system('cd /home/travis/Downloads \n ls')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
@@ -85,6 +86,34 @@ def sumStateData(dataState):
             Dict_day[row[0]] = Dict_day[row[0]] + float(newstr)
     return Dict_day
 
+def splitDataPorRegiaoDeSaude(filename_src,data):
+    Dict_data = dict()
+    filename_src = filename_src.split('.')
+    with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
+        reader = csv.reader(f,delimiter=";")
+        for row in reader:
+            Dict_data.setdefault(row[5],[]).append ([ row[7],row[CasosToNum(data)] ]) 
+    return Dict_data
+
+def writeDataCsVPorRegiaoDeSaude(filename_dest,data,tipo):
+    flag = False
+    for regioesDeSaude in data:
+        
+        if not flag or regioesDeSaude == '':
+            flag = True
+            continue
+
+        tipoN = tipo + regioesDeSaude
+        stateDataRaw = data[regioesDeSaude]
+        stateData = sumStateData(stateDataRaw)
+
+        with open(filename_dest+tipoN+'.csv', "w", encoding="utf8", newline="") as edge_file:
+            writer = csv.writer(edge_file, delimiter=",")
+
+            writer.writerow(['Data', tipoN])
+            for i in sorted(stateData):
+                    writer.writerow([i, stateData[i]])
+
 def runAll(state,legend):
     Dict_data_casosAcumulados = splitData(filename_src,'CasosAcumulados')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'CA',state,legend)
@@ -100,9 +129,9 @@ def runAll(state,legend):
 
 
 filename_src = copiarPastas(xlxsDir,filename_src)
-os.system('cd /home/travis/Downloads \n ls')
-os.system('cd ' + './dataRaw/' + ' \n ls')
-
+#os.system('cd /home/travis/Downloads \n ls')
+#os.system('cd ' + './dataRaw/' + ' \n ls')
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_23mai2020.csv'
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
 runAll('BA','BiA_An')
@@ -112,3 +141,9 @@ runAll('MA','MiA_An')
 runAll('PE','PiE_An')
 runAll('CE','CiE_An')
 runAll('PI','PiI_An')
+
+Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
+writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA')
+
+Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'obitosAcumulado')
+writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA')
