@@ -55,17 +55,29 @@ def writeDataCsV(filename_dest,data,tipo,state,complement):
     with open(filename_dest+tipo+'.csv', "w", encoding="utf8", newline="") as edge_file:
         writer = csv.writer(edge_file, delimiter=",")
         stateDataRaw = data[state]
-        stateData = sumStateData(stateDataRaw)
+        #stateData = sumStateData(stateDataRaw)
 
+        valorAnterior = 0
         writer.writerow(['Data', tipo])
-        for i in sorted(stateData):
-                writer.writerow([i, stateData[i]])
+        for i in stateDataRaw:
+            if i[1] == '':
+                value = 0
+            else:
+                value = int(i[1])
+            if valorAnterior > value:
+                break
+            valorAnterior = value
+            writer.writerow([i[0], value])
+        
+        #for i in sorted(stateData):
+                #writer.writerow([i, stateData[i]])
 
 def splitData(filename_src,data):
     Dict_data = dict()
     filename_src = filename_src.split('.')
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f,delimiter=";")
+
         for row in reader:
             Dict_data.setdefault(row[1],[]).append ([ row[7],row[CasosToNum(data)] ]) 
     return Dict_data
@@ -130,7 +142,7 @@ def runAll(state,legend):
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
-#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_23mai2020.csv'
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_24mai2020.csv'
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
 runAll('BA','BiA_An')
