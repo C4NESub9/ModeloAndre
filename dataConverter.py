@@ -3,7 +3,7 @@ import shutil
 import xlrd
 
 #xlxsDir = 'C:/Users/andre/Downloads/'
-xlxsDir = '/home/travis/Downloads'
+xlxsDir = '/home/travis/Downloads/'
 filename_src = './dataRaw/'
 filename_dest = './data/'
 
