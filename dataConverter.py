@@ -15,6 +15,7 @@ def csv_from_excel(xlsxFile):
 
     sh = wb.sheet_by_name('Sheet 1')
     #splitedFinename = xlsxFile.split('.')
+    print(splitedFinenameFromExtension[0])
     your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
     wr = csv.writer(your_csv_file,delimiter=";")
 
@@ -22,6 +23,7 @@ def csv_from_excel(xlsxFile):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
+    print(splitedFinenameFromExtension[0] + '.csv')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
