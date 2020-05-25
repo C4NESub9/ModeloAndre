@@ -28,7 +28,7 @@ def csv_from_excel(xlsxFile):
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
-    if os.path.isfile(src  + src_files[0]):
+    if os.path.isfile(src  + src_files[1]):
         newsrc = csv_from_excel(src + src_files[1])
         print('CopiarNewscr'+newsrc)
         print(src_files)
