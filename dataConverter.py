@@ -142,8 +142,8 @@ runAll('PE','PiE_An')
 runAll('CE','CiE_An')
 runAll('PI','PiI_An')
 
-Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
-writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA')
+#Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
+#writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA')
 
-Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'obitosAcumulado')
-writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA')
+#Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'obitosAcumulado')
+#writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA')
