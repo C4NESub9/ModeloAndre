@@ -8,39 +8,25 @@ filename_src = './dataRaw/'
 filename_dest = './data/'
 
 def csv_from_excel(xlsxFile):
-    print('1')
     wb = xlrd.open_workbook(xlsxFile)
-    print('2')
     splitedFinenameFromExtension = xlsxFile.split('.')
-    print('3')
     splitedFinename = splitedFinenameFromExtension[0].split('/')
-    print('4')
     splitedFinename = splitedFinename[-1]
-    print('5')
-
 
     sh = wb.sheet_by_name('Sheet 1')
-    print('6')
     splitedFinename = xlsxFile.split('.')
-    print('7')
-    your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
-    print('8')
     wr = csv.writer(your_csv_file,delimiter=";")
-    print('9')
     for rownum in range(sh.nrows):
         wr.writerow(sh.row_values(rownum))
 
     your_csv_file.close()
-    print('10')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
     if os.path.isfile(src  + src_files[0]):
-        os.system('cd /home/travis/Downloads \n ls')
         print(src + src_files[0])
         newsrc = csv_from_excel(src + src_files[0])
-        os.system('cd /home/travis/Downloads \n ls')
         shutil.copy(newsrc, dest)
         splitedFinename = newsrc.split('/')
         src_files[0] = splitedFinename[-1]
