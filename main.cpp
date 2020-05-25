@@ -10,10 +10,36 @@ OptimizationHandler::LeastSquare<double> *LS;
 OptimizationHandler::ExtendedLeastSquare<double> *ELS;
 LinAlg::Matrix<double> data;
 
+LinAlg::Matrix<double> findBestModel(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
+{
+    LinAlg::Matrix<double> error, ModelCoef;
+    double AIC4 = (Output*(~Output))(0,0);
+    double BIC = AIC4;
+    for(uint8_t k = 1; k < 6; ++k){
+        arx = new ModelHandler::ARX<double>(0,k);
+        ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
+        ELS->Optimize(Input,Output);
+        error = ELS->getFinalError();
+        uint16_t N = error.getNumberOfRows();
+        double C = (((~error)*error)(0,0))/N;
+        double AIC4_temp = N*log(C)+4*(k+1);
+        double BIC_temp = N*log(C)+(k+1)*log(N);
+
+        if(AIC4_temp < AIC4  && BIC_temp < BIC)
+        {
+            AIC4 = AIC4_temp; BIC = BIC_temp;
+            ModelCoef = arx->getModelCoef();
+        }
+
+    }
+
+    return ModelCoef;
+}
+
 void pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -38,13 +64,16 @@ void pegarDados(QString nome)
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
     LinAlg::Matrix<double> Output = matrix;
 
-    arx = new ModelHandler::ARX<double>(0,3);
-    //LS = new OptimizationHandler::LeastSquare<double>(arx);
-    //LS->Optimize(Input,Output);
-    //std::cout << arx->getModelCoef();
-    ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
-    ELS->Optimize(Input,Output);
+    //arx = new ModelHandler::ARX<double>(0,3);
+    ////LS = new OptimizationHandler::LeastSquare<double>(arx);
+    ////LS->Optimize(Input,Output);
+    ////std::cout << arx->getModelCoef();
+    //ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
+    //ELS->Optimize(Input,Output);
 
+    LinAlg::Matrix<double> ModelCoef = findBestModel(Input, Output);
+    arx = new ModelHandler::ARX<double>(0,ModelCoef.getNumberOfRows());
+    arx->setModelCoef(ModelCoef);
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 2; i < counter; ++i)
@@ -63,8 +92,8 @@ void pegarDados(QString nome)
 
 void salvarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 

@@ -77,7 +77,7 @@ void OptimizationHandler::ExtendedLeastSquare<Type>::Optimize(LinAlg::Matrix<Typ
         //    e(0,j) = Output(0,j-1)-yest(j,0);
         e = (~(B-yest));
         //std::cout << (~e) << std::endl;
-
+        this->error = e;
     }
     this->model->setModelCoef(MQEModelCoef(from(0)-->MQEModelCoef.getNumberOfRows()-ne-1,0));
     //std::cout << this->model->getModelCoef()<< std::endl;

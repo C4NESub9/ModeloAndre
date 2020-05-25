@@ -12,10 +12,11 @@ namespace OptimizationHandler{
 
         void Optimize();
         void Optimize(LinAlg::Matrix<Type> Input, LinAlg::Matrix<Type> Output);
-
+        LinAlg::Matrix<Type> getFinalError(){return this->error;}
     private:
         OptimizationHandler::LeastSquare<Type> *LS;
         uint8_t nu,ny,ne;
+        LinAlg::Matrix<Type> error;
     };
 }
 
