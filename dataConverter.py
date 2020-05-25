@@ -15,7 +15,7 @@ def csv_from_excel(xlsxFile):
 
     sh = wb.sheet_by_name('Sheet 1')
     #splitedFinename = xlsxFile.split('.')
-    print(splitedFinenameFromExtension[0])
+    print('CSV_from_Excel'+splitedFinenameFromExtension[0])
     your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
     wr = csv.writer(your_csv_file,delimiter=";")
 
@@ -29,9 +29,9 @@ def csv_from_excel(xlsxFile):
 def copiarPastas(src,dest):
     src_files = os.listdir(src)
     if os.path.isfile(src  + src_files[0]):
-        newsrc = csv_from_excel(src + src_files[0])
-        print(newsrc)
-        print(src_files[0])
+        newsrc = csv_from_excel(src + src_files[1])
+        print('CopiarNewscr'+newsrc)
+        print(src_files)
         shutil.copy(newsrc, dest)
         splitedFinename = newsrc.split('/')
         src_files[0] = splitedFinename[-1]
