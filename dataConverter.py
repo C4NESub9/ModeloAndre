@@ -15,6 +15,7 @@ def csv_from_excel(xlsxFile):
 
     sh = wb.sheet_by_name('Sheet 1')
     splitedFinename = xlsxFile.split('.')
+    your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
     wr = csv.writer(your_csv_file,delimiter=";")
     for rownum in range(sh.nrows):
         wr.writerow(sh.row_values(rownum))
