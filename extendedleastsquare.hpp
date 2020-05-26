@@ -46,7 +46,7 @@ void OptimizationHandler::ExtendedLeastSquare<Type>::Optimize(LinAlg::Matrix<Typ
 
     LinAlg::Matrix<Type> MQEModelCoef;
 
-    for (uint8_t i = 0; i < 4; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
         LinAlg::Matrix<Type> Fi;
         for(uint8_t j = 0; j < this->nu; ++j )
