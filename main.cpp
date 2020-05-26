@@ -181,10 +181,10 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isol
 
     for(unsigned i = 0; i < 7; ++i){
         temp = arx->sim(Isolamento,temp);
-        predictOutput(0,i) = (int)temp;
+        predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    //std::cout << data << std::endl;
+    std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
 }
 
