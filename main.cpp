@@ -227,7 +227,10 @@ void salvarDados(QString nome)
     stream << "Saida,Saida_Estimada,Erro\n";
     for(int i = 0; i < data.getNumberOfRows(); ++i){
         for(int j = 0; j < data.getNumberOfColumns();++j)
-            stream << QString::number(data(i,j)) << ',';
+            if(j < data.getNumberOfColumns()-1)
+                stream << QString::number(data(i,j)) << ',';
+            else
+                stream << QString::number(data(i,j));
         stream << '\n';
     }
 
