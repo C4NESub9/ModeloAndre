@@ -176,7 +176,7 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut){
     LinAlg::Matrix<double> predictOutput(1,7);
     for(unsigned i = 0; i < 7; ++i){
         temp = arx->sim(0,temp);
-        predictOutput(0,i) = (int)temp;
+        predictOutput(50,i) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
