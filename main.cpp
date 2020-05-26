@@ -173,19 +173,19 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut){
         estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
 
     double temp = estOutput(0,counter-1);
-    LinAlg::Matrix<double> predictOutput(1,7);
-    for(unsigned i = 0; i < 7; ++i){
-        temp = arx->sim(0,temp);
+    LinAlg::Matrix<double> predictOutput(1,15);
+    for(unsigned i = 0; i < 15; ++i){
+        temp = arx->sim(-50,temp);
         predictOutput(0,i) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl;
+    std::cout << arx->print() << std::endl; //18451.000
 }
 
 std::string pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
@@ -213,7 +213,7 @@ std::string pegarDados(QString nome)
 
 void salvarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
