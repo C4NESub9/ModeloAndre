@@ -45,9 +45,9 @@ def getFilename(src):
 def CasosToNum(shortMonth):
     return{
             'CasosAcumulados' : 10,
-            'obitosAcumulado' : 11,
-            'Recuperadosnovos': 12,
-            'emAcompanhamentoNovos': 13
+            'obitosAcumulado' : 12,
+            'Recuperadosnovos': 14,
+            'emAcompanhamentoNovos': 15
     }[shortMonth]
 
 def writeDataCsV(filename_dest,data,tipo,state,complement):
@@ -78,7 +78,11 @@ def splitData(filename_src,data):
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f,delimiter=";")
 
+        lastRow = ''
         for row in reader:
+            if lastRow == 'Nordeste' and row[0] == 'Sudeste':
+                break
+            lastRow = row[0] 
             Dict_data.setdefault(row[1],[]).append ([ row[7],row[CasosToNum(data)] ]) 
     return Dict_data
 
@@ -142,7 +146,7 @@ def runAll(state,legend):
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
-#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_24mai2020.csv'
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_25mai2020.csv'
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
 runAll('BA','BiA_An')
