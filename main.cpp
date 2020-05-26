@@ -158,7 +158,7 @@ void calculaModeloARMQE(std::string matrix){
     std::cout << arx->print() << std::endl;
 }
 
-void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut){
+void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento){
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
@@ -175,7 +175,7 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut){
     double temp = estOutput(0,counter-1);
     LinAlg::Matrix<double> predictOutput(1,7);
     for(unsigned i = 0; i < 7; ++i){
-        temp = arx->sim(-50,temp);
+        temp = arx->sim(Isolamento,temp);
         predictOutput(0,i) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
@@ -241,8 +241,12 @@ int main()
            std::string Input = pegarDados(isolamentoEstados + estados[j]);
            //calculaModeloARMQ(matrix);
            //calculaModeloARMQE(matrix);
-           calculaModeloARXMQ(Input, Output);
+           calculaModeloARXMQ(Input, Output,0);
            salvarDados(tipoDados[i] + estados[j]);
+           calculaModeloARXMQ(Input, Output,-50);
+           salvarDados(tipoDados[i] + estados[j] + "50");
+           calculaModeloARXMQ(Input, Output,-75);
+           salvarDados(tipoDados[i] + estados[j] + "75");
         }
 
     return 0;
