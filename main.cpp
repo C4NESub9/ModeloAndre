@@ -158,7 +158,7 @@ void calculaModeloARMQE(std::string matrix){
     std::cout << arx->print() << std::endl;
 }
 
-void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento){
+void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
@@ -173,14 +173,19 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isol
         estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
 
     double temp = estOutput(0,counter-1);
-    LinAlg::Matrix<double> predictOutput(1,7);
+    LinAlg::Matrix<double> predictOutput(1,7+atrasoEnvolvido);
+    for(unsigned i = 0; i < atrasoEnvolvido; ++i){
+        temp = arx->sim(Input(0,counter-2),temp);
+        predictOutput(0,i) = (int)temp;
+    }
+
     for(unsigned i = 0; i < 7; ++i){
         temp = arx->sim(Isolamento,temp);
         predictOutput(0,i) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl; //18451.000
+    std::cout << arx->print() << std::endl;
 }
 
 std::string pegarDados(QString nome)
@@ -241,11 +246,11 @@ int main()
            std::string Input = pegarDados(isolamentoEstados + estados[j]);
            //calculaModeloARMQ(matrix);
            //calculaModeloARMQE(matrix);
-           calculaModeloARXMQ(Input, Output,0);
+           calculaModeloARXMQ(Input, Output,0,0);
            salvarDados(tipoDados[i] + estados[j]);
-           calculaModeloARXMQ(Input, Output,-50);
+           calculaModeloARXMQ(Input, Output,-50, 10);
            salvarDados(tipoDados[i] + estados[j] + "50");
-           calculaModeloARXMQ(Input, Output,-75);
+           calculaModeloARXMQ(Input, Output,-75,10);
            salvarDados(tipoDados[i] + estados[j] + "75");
         }
 
