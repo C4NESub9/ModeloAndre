@@ -159,12 +159,18 @@ def splitDataBrasil(filename_src,data):
 def runBrasil(state,legend):
     Dict_data_casosAcumulados = splitDataBrasil(filename_src,'CasosAcumulados')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'CA',state,legend)
+    Dict_data_casosAcumulados = splitDataBrasil(filename_src,'obitosAcumulado')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'OA',state,legend)
+    Dict_data_casosAcumulados = splitDataBrasil(filename_src,'Recuperadosnovos')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'RN',state,legend)
+    Dict_data_casosAcumulados = splitDataBrasil(filename_src,'emAcompanhamentoNovos')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
 
 
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
-#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_25mai2020.csv'
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_26mai2020.csv'
 # Norte
 runBrasil('Brasil','BiR_An')
 

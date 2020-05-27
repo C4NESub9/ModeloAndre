@@ -82,8 +82,8 @@ stateListSul = [SO+'Paraná' , SO+ 'Santa Catarina' , SO+'Rio Grande do Sul' ]
 stateListFileCentro = ["MiS_An","MiT_An","GiO_An","DiF_An"]
 stateListCentro = [SO+'Mato Grosso do Sul' , SO+'Mato Grosso' , SO+'Goiás' , 'Federal District']
 
-stateListFile = "BiR_An" + stateListFileNordeste + stateListFileNorte + stateListFileSuldeste + stateListFileSul + stateListFileCentro
-stateList = "" + stateListNordeste + stateListNorte + stateListSuldeste + stateListSul + stateListCentro
+stateListFile = ["BiR_An"] + stateListFileNordeste + stateListFileNorte + stateListFileSuldeste + stateListFileSul + stateListFileCentro
+stateList = [""] + stateListNordeste + stateListNorte + stateListSuldeste + stateListSul + stateListCentro
 
 for i in zip(stateListFile,stateList):
     writeDataCsV(filename_dest+'GDM' + i[0] + '.csv',BrazilMobility, i[1])

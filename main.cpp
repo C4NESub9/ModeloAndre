@@ -193,7 +193,7 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
         estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
 
     double temp = estOutput(0,counter-1), inputTemp = 0;
-    LinAlg::Matrix<double> predictOutput(1,7+atrasoEnvolvido);
+    LinAlg::Matrix<double> predictOutput(1,10+atrasoEnvolvido);
     for(unsigned i = 0; i < atrasoEnvolvido; ++i){
         inputTemp = Input(0,counter-2);
         temp = arx->sim(inputTemp,temp);
@@ -277,14 +277,14 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
 }
 
 int main()
-{
-    QString estados[28] = {"BiR_An", "AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An",      "RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An",    "MiG_An","EiS_An","RiJ_An","SiP_An",     "PiR_An","SiC_An","RiS_An",        "MiS_An","MiT_An","GiO_An","DiF_An"};
+{                                      /* Nordeste*/                                                                         /* Norte*/                                                     /* Suldeste*/                        /* Sul*/                   /* Centro-oeste*/
+    QStringList estados = {"BiR_An", "AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An","RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An","MiG_An","EiS_An","RiJ_An","SiP_An","PiR_An","SiC_An","RiS_An","MiS_An","MiT_An","GiO_An","DiF_An"};
     QString tipoDados[2] = {"CA","OA"};
     QString isolamentoEstados = "GDM";
 
     for(uint8_t i = 0; i < 2; ++i)
         for(uint8_t j = 0; j < 28; ++j){
-            std::string *Input = pegarDados(isolamentoEstados + estados[j]);
+            std::string *Input = pegarDados(isolamentoEstados + estados[j].toStdString().c_str());
             std::string *Output = pegarDados(tipoDados[i] + estados[j]);
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
