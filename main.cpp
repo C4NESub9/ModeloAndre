@@ -250,11 +250,19 @@ void salvarDados(QString nome, QString diasParaGrafico)
     stream << "Data,Saida_Estimada,Saida,Erro\n";
     for(int i = 0; i < data.getNumberOfRows(); ++i){
         stream << Date.toString("yyyy-MM-dd") << ',';
-        for(int j = 0; j < data.getNumberOfColumns();++j)
-            if(j < data.getNumberOfColumns()-1)
-                stream << QString::number(data(i,j)) << ',';
+        for(int j = 0; j < data.getNumberOfColumns();++j){
+            QString temp;
+            if(i > 30 && data(i,j) == 0)
+                temp = "+";
             else
-                stream << QString::number(data(i,j));
+                temp = QString::number(data(i,j));
+
+            if(j < data.getNumberOfColumns()-1)
+                stream << temp << ',';
+            else
+                stream << temp;
+        }
+
         stream << '\n';
         Date = Date.addDays(1);
     }
