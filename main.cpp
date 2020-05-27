@@ -122,6 +122,43 @@ LinAlg::Matrix<double> findBestARXModelMQ(LinAlg::Matrix<double> Input, LinAlg::
     return ModelCoef;
 }
 
+LinAlg::Matrix<double> findBestARXModelMQE(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
+{
+    ModelHandler::ARX<double> *arx;
+    OptimizationHandler::ExtendedLeastSquare<double> *ELS;
+
+    uint16_t counter = Output.getNumberOfColumns();
+    LinAlg::Matrix<double> error, ModelCoef;
+    double AIC4 = (Output*(~Output))(0,0);
+    double BIC = AIC4, C = AIC4;
+
+    for(uint8_t k = 1; k < 3; ++k){
+        arx = new ModelHandler::ARX<double>(0,k);
+        ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
+        ELS->Optimize(Input,Output);
+
+        //arx->setModelCoef(ModelCoef);
+        arx->setInitialOutputValue(Output(0,0));
+        LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
+        for(unsigned i = 2; i < counter; ++i)
+            estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
+
+        error = Output - estOutput;
+        uint16_t N = error.getNumberOfColumns();
+        //std::cout << (error*(~error)) << "\n";
+        double Ctemp = ((error*(~error))(0,0))/N;
+        double AIC4_temp = N*log(Ctemp)+4*(k+1);
+        double BIC_temp = N*log(Ctemp)+(k+1)*log(N);
+
+        if((AIC4_temp < AIC4  && BIC_temp < BIC) && Ctemp < C){
+            AIC4 = AIC4_temp; BIC = BIC_temp; C = Ctemp;
+            ModelCoef = arx->getModelCoef();
+        }
+    }
+
+    return ModelCoef;
+}
+
 LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
@@ -210,6 +247,39 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
     return data;
 }
 
+LinAlg::Matrix<double> calculaModeloARXMQE(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
+    ModelHandler::ARX<double> *arx;
+    LinAlg::Matrix<double> Output = matrixOut;
+    uint16_t counter = Output.getNumberOfColumns()+1;
+    LinAlg::Matrix<double> Input = matrixIn;
+    Input = Input(0,from(0)-->counter-2);
+
+    LinAlg::Matrix<double> ModelCoef = findBestARXModelMQE(Input, Output);
+    arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
+    arx->setModelCoef(ModelCoef);
+    arx->setInitialOutputValue(Output(0,0));
+    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
+    for(unsigned i = 2; i < counter; ++i)
+        estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
+
+    double temp = estOutput(0,counter-1), inputTemp = 0;
+    LinAlg::Matrix<double> predictOutput(1,10+atrasoEnvolvido);
+    for(unsigned i = 0; i < atrasoEnvolvido; ++i){
+        inputTemp = Input(0,counter-2);
+        temp = arx->sim(inputTemp,temp);
+        predictOutput(0,i) = (int)temp;
+    }
+
+    for(unsigned i = 0; i < 10; ++i){
+        temp = arx->sim(Isolamento,temp);
+        predictOutput(0,i+atrasoEnvolvido) = (int)temp;
+    }
+    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    //std::cout << data << std::endl;
+    //std::cout << arx->print() << std::endl;
+    return data;
+}
+
 LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
@@ -221,28 +291,23 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
     arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
     arx->setModelCoef(ModelCoef);
     arx->setInitialOutputValue(Output(0,0));
-    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,20);
-    for(unsigned i = 2; i < 20; ++i)
-        estOutput(0,i) = int(arx->sim(Input(0,counter-2),Output(0,i-2)));
-
-    double temp = estOutput(0,counter-1), inputTemp = 0;
-    LinAlg::Matrix<double> predictOutput(1,counter-20);
-    for(unsigned i = 20; i < counter-1; ++i){
-        inputTemp = Input(0,i);
-        temp = arx->sim(inputTemp,temp);
-        predictOutput(0,i) = (int)temp;
+    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
+    for(unsigned i = 2; i < 45; ++i)
+        estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
+    for(unsigned i = 45; i < counter; ++i){
+        estOutput(0,i) = arx->sim(Input(0,counter-2),estOutput(0,i-1));
     }
 
-    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    //std::cout << data << std::endl;
+    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
     return data;
 }
 
 std::string* pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -276,8 +341,8 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
     QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
 
 
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 
