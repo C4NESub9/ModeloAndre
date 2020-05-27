@@ -66,8 +66,24 @@ def writeDataCsV(filename_dest,state, stateName):
 BrazilMobility = splitData(dest+'Global_Mobility_Report.csv','residential_percent_change_from_baseline')
 #print(BrazilMobility)
 
-stateListFile = ["AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"]
-stateList = ['State of Alagoas', 'State of Bahia', 'State of Ceará', 'State of Maranhão', 'State of Paraíba', 'State of Pernambuco', 'State of Piauí', 'State of Rio Grande do Norte', 'State of Sergipe']
+SO = 'State of '
+stateListFileNordeste = ["AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"]
+stateListNordeste = ['State of Alagoas', 'State of Bahia', 'State of Ceará', 'State of Maranhão', 'State of Paraíba', 'State of Pernambuco', 'State of Piauí', 'State of Rio Grande do Norte', 'State of Sergipe']
+
+stateListFileNorte = ["RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An"]
+stateListNorte = [SO+ 'Rondônia', SO+'Acre' , SO+'Amazonas' , SO+ 'Roraima', SO+'Pará', SO+'Amapá', SO+'Tocantins']
+
+stateListFileSuldeste = ["MiG_An","EiS_An","RiJ_An","SiP_An"]
+stateListSuldeste = [SO+ 'Minas Gerais', SO+ 'Espírito Santo', SO+ 'Rio de Janeiro', SO+'São Paulo' ]
+
+stateListFileSul = ["PiR_An","SiC_An","RiS_An"]
+stateListSul = [SO+'Paraná' , SO+ 'Santa Catarina' , SO+'Rio Grande do Sul' ]
+
+stateListFileCentro = ["MiS_An","MiT_An","GiO_An","DiF_An"]
+stateListCentro = [SO+'Mato Grosso do Sul' , SO+'Mato Grosso' , SO+'Goiás' , 'Federal District']
+
+stateListFile = stateListFileNordeste + stateListFileNorte + stateListFileSuldeste + stateListFileSul + stateListFileCentro
+stateList = stateListNordeste + stateListNorte + stateListSuldeste + stateListSul + stateListCentro
 
 for i in zip(stateListFile,stateList):
     writeDataCsV(filename_dest+'GDM' + i[0] + '.csv',BrazilMobility, i[1])

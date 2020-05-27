@@ -79,8 +79,8 @@ def splitData(filename_src,data):
         reader = csv.reader(f,delimiter=";")
 
         lastRow = ''
-        for row in reader:
-            if lastRow == 'Nordeste' and row[0] == 'Sudeste':
+        for row in reader: 
+            if lastRow == 'Centro-Oeste' and row[0] == 'Norte':
                 break
             lastRow = row[0] 
             Dict_data.setdefault(row[1],[]).append ([ row[7],row[CasosToNum(data)] ]) 
@@ -147,6 +147,16 @@ filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
 #filename_src = './dataRaw/HIST_PAINEL_COVIDBR_25mai2020.csv'
+# Norte
+runAll('RO','RiO_An')
+runAll('AC','AiC_An')
+runAll('AM','AiM_An')
+runAll('RR','RiR_An')
+runAll('PA','PiA_An')
+runAll('AP','AiP_An')
+runAll('TO','TiO_An')
+
+# nordeste
 runAll('RN','RiN_An')
 runAll('PB','PiB_An')
 runAll('BA','BiA_An')
@@ -156,6 +166,24 @@ runAll('MA','MiA_An')
 runAll('PE','PiE_An')
 runAll('CE','CiE_An')
 runAll('PI','PiI_An')
+
+# Suldeste
+runAll('MG','MiG_An')
+runAll('ES','EiS_An')
+runAll('RJ','RiJ_An')
+runAll('SP','SiP_An')
+
+# Sul
+runAll('PR','PiR_An')
+runAll('SC','SiC_An')
+runAll('RS','RiS_An')
+
+# Centro-Oeste
+runAll('MS','MiS_An')
+runAll('MT','MiT_An')
+runAll('GO','GiO_An')
+runAll('DF','DiF_An')
+
 
 #Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
 #writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA')
