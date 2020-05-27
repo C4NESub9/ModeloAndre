@@ -283,7 +283,7 @@ int main()
     QString isolamentoEstados = "GDM";
 
     for(uint8_t i = 0; i < 2; ++i)
-        for(uint8_t j = 0; j < 9; ++j){
+        for(uint8_t j = 0; j < 27; ++j){
             std::string *Input = pegarDados(isolamentoEstados + estados[j]);
             std::string *Output = pegarDados(tipoDados[i] + estados[j]);
             //calculaModeloARMQ(matrix);
