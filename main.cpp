@@ -221,12 +221,12 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
     arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
     arx->setModelCoef(ModelCoef);
     arx->setInitialOutputValue(Output(0,0));
-    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
+    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,20);
     for(unsigned i = 2; i < 20; ++i)
         estOutput(0,i) = int(arx->sim(Input(0,counter-2),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1), inputTemp = 0;
-    LinAlg::Matrix<double> predictOutput(1,counter-21);
+    LinAlg::Matrix<double> predictOutput(1,counter-20);
     for(unsigned i = 20; i < counter-1; ++i){
         inputTemp = Input(0,i);
         temp = arx->sim(inputTemp,temp);
