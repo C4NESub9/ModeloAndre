@@ -178,7 +178,6 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix){
 }
 
 LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
-    LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
@@ -193,10 +192,11 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
     for(unsigned i = 2; i < counter; ++i)
         estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
 
-    double temp = estOutput(0,counter-1);
+    double temp = estOutput(0,counter-1), inputTemp = 0;
     LinAlg::Matrix<double> predictOutput(1,7+atrasoEnvolvido);
     for(unsigned i = 0; i < atrasoEnvolvido; ++i){
-        temp = arx->sim(Input(0,counter-2),temp);
+        inputTemp = Input(0,counter-2);
+        temp = arx->sim(inputTemp,temp);
         predictOutput(0,i) = (int)temp;
     }
 
@@ -204,7 +204,7 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
         temp = arx->sim(Isolamento,temp);
         predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
-    data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
     return data;
@@ -290,10 +290,10 @@ int main()
             //calculaModeloARMQE(matrix);
             LinAlg::Matrix<double> data = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
             salvarDados(tipoDados[i] + estados[j], Output[0].c_str(), data);
-            calculaModeloARXMQ(Input[1], Output[1], -50, 10);
-            salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data);
-            calculaModeloARXMQ(Input[1], Output[1], -75, 10);
-            salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data);
+            LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 10);
+            salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data2);
+            LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
+            salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data3);
         }
 
     return 0;
