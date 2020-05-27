@@ -389,7 +389,7 @@ int main()
             LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
             salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data3);
             LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1]);
-            salvarDados(tipoDados[i] + estados[j] + "PN", Output[0].c_str(), data3);
+            salvarDados(tipoDados[i] + estados[j] + "PN", Output[0].c_str(), data4);
         }
 
     return 0;
