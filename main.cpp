@@ -200,7 +200,7 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
         predictOutput(0,i) = (int)temp;
     }
 
-    for(unsigned i = 0; i < 7; ++i){
+    for(unsigned i = 0; i < 10; ++i){
         temp = arx->sim(Isolamento,temp);
         predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
