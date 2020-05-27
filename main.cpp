@@ -280,21 +280,23 @@ LinAlg::Matrix<double> calculaModeloARXMQE(std::string matrixIn, std::string mat
     return data;
 }
 
-LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
+LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, double endMinusDays){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
     Input = Input(0,from(0)-->counter-2);
 
+    double N = counter - endMinusDays - 1;
+
     LinAlg::Matrix<double> ModelCoef = findBestARXModelMQ(Input, Output);
     arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
     arx->setModelCoef(ModelCoef);
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
-    for(unsigned i = 2; i < 45; ++i)
+    for(unsigned i = 2; i < N; ++i)
         estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
-    for(unsigned i = 45; i < counter; ++i){
+    for(unsigned i = N; i < counter; ++i){
         estOutput(0,i) = arx->sim(Input(0,counter-2),estOutput(0,i-1));
     }
 
@@ -388,7 +390,7 @@ int main()
             salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data2);
             LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
             salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data3);
-            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1]);
+            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 14);
             salvarDados(tipoDados[i] + estados[j] + "PN", Output[0].c_str(), data4);
         }
 
