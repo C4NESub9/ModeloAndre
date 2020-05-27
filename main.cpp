@@ -274,11 +274,11 @@ int main()
             std::string *Output = pegarDados(tipoDados[i] + estados[j]);
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
-            calculaModeloARXMQ(Input[1], Output[1],0,0);
+            calculaModeloARXMQ(Input[1], Output[1], 0, 10);
             salvarDados(tipoDados[i] + estados[j], Output[0].c_str());
-            calculaModeloARXMQ(Input[1], Output[1],-50, 0);
+            calculaModeloARXMQ(Input[1], Output[1], -50, 10);
             salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str());
-            calculaModeloARXMQ(Input[1], Output[1],-75,0);
+            calculaModeloARXMQ(Input[1], Output[1], -75, 10);
             salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str());
 
         }
