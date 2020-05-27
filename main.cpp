@@ -299,15 +299,15 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
     }
 
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    std::cout << data << std::endl;
+    //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
     return data;
 }
 
 std::string* pegarDados(QString nome)
 {
-    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -341,8 +341,8 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
     QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
 
 
-    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 
