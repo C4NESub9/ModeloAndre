@@ -9,7 +9,7 @@
 //ModelHandler::ARX<double> *arx;
 //OptimizationHandler::LeastSquare<double> *LS;
 //OptimizationHandler::ExtendedLeastSquare<double> *ELS;
-LinAlg::Matrix<double> data;
+//LinAlg::Matrix<double> data;
 
 LinAlg::Matrix<double> findBestARModelMQ(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
 {
@@ -122,9 +122,10 @@ LinAlg::Matrix<double> findBestARXModelMQ(LinAlg::Matrix<double> Input, LinAlg::
     return ModelCoef;
 }
 
-void calculaModeloARMQ(std::string matrix){
+LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
+    LinAlg::Matrix<double> data;
 
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
@@ -146,9 +147,11 @@ void calculaModeloARMQ(std::string matrix){
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
+    return data;
 }
 
-void calculaModeloARMQE(std::string matrix){
+LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix){
+    LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
     uint16_t counter = Output.getNumberOfColumns()+1;
@@ -171,9 +174,11 @@ void calculaModeloARMQE(std::string matrix){
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
+    return data;
 }
 
-void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
+LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
+    LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
@@ -202,6 +207,7 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isol
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
+    return data;
 }
 
 std::string* pegarDados(QString nome)
@@ -236,7 +242,7 @@ std::string* pegarDados(QString nome)
     return matrix;
 }
 
-void salvarDados(QString nome, QString diasParaGrafico)
+void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> data)
 {
     QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
 
@@ -282,13 +288,12 @@ int main()
             std::string *Output = pegarDados(tipoDados[i] + estados[j]);
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
-            calculaModeloARXMQ(Input[1], Output[1], 0, 10);
-            salvarDados(tipoDados[i] + estados[j], Output[0].c_str());
+            LinAlg::Matrix<double> data = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
+            salvarDados(tipoDados[i] + estados[j], Output[0].c_str(), data);
             calculaModeloARXMQ(Input[1], Output[1], -50, 10);
-            salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str());
+            salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data);
             calculaModeloARXMQ(Input[1], Output[1], -75, 10);
-            salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str());
-
+            salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data);
         }
 
     return 0;
