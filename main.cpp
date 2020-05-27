@@ -381,7 +381,7 @@ int main()
     for(uint8_t i = 0; i < 2; ++i)
         for(uint8_t j = 0; j < 28; ++j){
             std::string *Input = pegarDados(isolamentoEstados + estados[j].toStdString().c_str());
-            std::string *Output = pegarDados(tipoDados[i] + estados[j]);
+            std::string *Output = pegarDados(tipoDados[i] + estados[j].toStdString().c_str());
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
             LinAlg::Matrix<double> data = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
