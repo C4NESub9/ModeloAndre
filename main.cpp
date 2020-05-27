@@ -136,7 +136,7 @@ LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 2; i < counter; ++i)
-        estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
+        estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1);
     LinAlg::Matrix<double> predictOutput(1,7);
@@ -163,7 +163,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix){
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 2; i < counter; ++i)
-        estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
+        estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1);
     LinAlg::Matrix<double> predictOutput(1,7);
@@ -190,7 +190,7 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 2; i < counter; ++i)
-        estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
+        estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1), inputTemp = 0;
     LinAlg::Matrix<double> predictOutput(1,10+atrasoEnvolvido);
@@ -207,6 +207,34 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
+    return data;
+}
+
+LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
+    ModelHandler::ARX<double> *arx;
+    LinAlg::Matrix<double> Output = matrixOut;
+    uint16_t counter = Output.getNumberOfColumns()+1;
+    LinAlg::Matrix<double> Input = matrixIn;
+    Input = Input(0,from(0)-->counter-2);
+
+    LinAlg::Matrix<double> ModelCoef = findBestARXModelMQ(Input, Output);
+    arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
+    arx->setModelCoef(ModelCoef);
+    arx->setInitialOutputValue(Output(0,0));
+    LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
+    for(unsigned i = 2; i < 20; ++i)
+        estOutput(0,i) = int(arx->sim(Input(0,counter-2),Output(0,i-2)));
+
+    double temp = estOutput(0,counter-1), inputTemp = 0;
+    LinAlg::Matrix<double> predictOutput(1,counter-21);
+    for(unsigned i = 20; i < counter-1; ++i){
+        inputTemp = Input(0,i);
+        temp = arx->sim(inputTemp,temp);
+        predictOutput(0,i) = (int)temp;
+    }
+
+    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    std::cout << data << std::endl;
     return data;
 }
 
@@ -294,6 +322,8 @@ int main()
             salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data2);
             LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
             salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data3);
+            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1]);
+            salvarDados(tipoDados[i] + estados[j] + "PN", Output[0].c_str(), data3);
         }
 
     return 0;
