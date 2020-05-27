@@ -142,12 +142,32 @@ def runAll(state,legend):
     Dict_data_casosAcumulados = splitData(filename_src,'emAcompanhamentoNovos')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
 
+def splitDataBrasil(filename_src,data):
+    Dict_data = dict()
+    filename_src = filename_src.split('.')
+    with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
+        reader = csv.reader(f,delimiter=";")
+
+        lastRow = ''
+        for row in reader: 
+            if lastRow == 'Brasil' and row[0] == 'Norte':
+                break
+            lastRow = row[0] 
+            Dict_data.setdefault(row[0],[]).append ([ row[7],row[CasosToNum(data)] ]) 
+    return Dict_data
+
+def runBrasil(state,legend):
+    Dict_data_casosAcumulados = splitDataBrasil(filename_src,'CasosAcumulados')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'CA',state,legend)
+
 
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
 #filename_src = './dataRaw/HIST_PAINEL_COVIDBR_25mai2020.csv'
 # Norte
+runBrasil('Brasil','BiR_An')
+
 runAll('RO','RiO_An')
 runAll('AC','AiC_An')
 runAll('AM','AiM_An')
@@ -183,6 +203,8 @@ runAll('MS','MiS_An')
 runAll('MT','MiT_An')
 runAll('GO','GiO_An')
 runAll('DF','DiF_An')
+
+
 
 
 #Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
