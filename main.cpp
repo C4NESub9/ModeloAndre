@@ -146,7 +146,7 @@ LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl;
+    //std::cout << arx->print() << std::endl;
     return data;
 }
 
@@ -173,7 +173,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix){
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl;
+    //std::cout << arx->print() << std::endl;
     return data;
 }
 
@@ -206,7 +206,7 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
     }
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl;
+    //std::cout << arx->print() << std::endl;
     return data;
 }
 
@@ -234,7 +234,8 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut){
     }
 
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    std::cout << data << std::endl;
+    //std::cout << data << std::endl;
+    std::cout << arx->print() << std::endl;
     return data;
 }
 
