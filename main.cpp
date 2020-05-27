@@ -4,18 +4,23 @@
 #include <QFile>
 #include <QStringList>
 #include <QTextStream>
+#include <QDate>
 
-ModelHandler::ARX<double> *arx;
-OptimizationHandler::LeastSquare<double> *LS;
-OptimizationHandler::ExtendedLeastSquare<double> *ELS;
+//ModelHandler::ARX<double> *arx;
+//OptimizationHandler::LeastSquare<double> *LS;
+//OptimizationHandler::ExtendedLeastSquare<double> *ELS;
 LinAlg::Matrix<double> data;
 
 LinAlg::Matrix<double> findBestARModelMQ(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
 {
+    ModelHandler::ARX<double> *arx;
+    OptimizationHandler::LeastSquare<double> *LS;
+
     uint16_t counter = Output.getNumberOfColumns();
     LinAlg::Matrix<double> error, ModelCoef;
     double AIC4 = (Output*(~Output))(0,0);
     double BIC = AIC4, C = AIC4;
+
     for(uint8_t k = 1; k < 3; ++k){
         arx = new ModelHandler::ARX<double>(0,k);
         LS = new OptimizationHandler::LeastSquare<double>(arx);
@@ -45,10 +50,14 @@ LinAlg::Matrix<double> findBestARModelMQ(LinAlg::Matrix<double> Input, LinAlg::M
 
 LinAlg::Matrix<double> findBestARModelMQE(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
 {
+    ModelHandler::ARX<double> *arx;
+    OptimizationHandler::ExtendedLeastSquare<double> *ELS;
+
     uint16_t counter = Output.getNumberOfColumns();
     LinAlg::Matrix<double> error, ModelCoef;
     double AIC4 = (Output*(~Output))(0,0);
     double BIC = AIC4, C = AIC4;
+
     for(uint8_t k = 1; k < 3; ++k){
         arx = new ModelHandler::ARX<double>(0,k);
         ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
@@ -78,10 +87,14 @@ LinAlg::Matrix<double> findBestARModelMQE(LinAlg::Matrix<double> Input, LinAlg::
 
 LinAlg::Matrix<double> findBestARXModelMQ(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
 {
+    ModelHandler::ARX<double> *arx;
+    OptimizationHandler::LeastSquare<double> *LS;
+
     uint16_t counter = Output.getNumberOfColumns();
     LinAlg::Matrix<double> error, ModelCoef;
     double AIC4 = (Output*(~Output))(0,0);
     double BIC = AIC4, C = AIC4;
+
     for(uint8_t k = 1; k < 3; ++k){
         arx = new ModelHandler::ARX<double>(k,k);
         LS = new OptimizationHandler::LeastSquare<double>(arx);
@@ -110,6 +123,7 @@ LinAlg::Matrix<double> findBestARXModelMQ(LinAlg::Matrix<double> Input, LinAlg::
 }
 
 void calculaModeloARMQ(std::string matrix){
+    ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
 
     uint16_t counter = Output.getNumberOfColumns()+1;
@@ -135,6 +149,7 @@ void calculaModeloARMQ(std::string matrix){
 }
 
 void calculaModeloARMQE(std::string matrix){
+    ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
@@ -159,6 +174,7 @@ void calculaModeloARMQE(std::string matrix){
 }
 
 void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isolamento, uint8_t atrasoEnvolvido){
+    ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
@@ -184,54 +200,63 @@ void calculaModeloARXMQ(std::string matrixIn, std::string matrixOut, double Isol
         predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
     data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    std::cout << data << std::endl;
+    //std::cout << data << std::endl;
     std::cout << arx->print() << std::endl;
 }
 
-std::string pegarDados(QString nome)
+std::string* pegarDados(QString nome)
 {
     //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
-    std::string matrix;
+    std::string *matrix = new std::string[2];
+    QString date;
     uint16_t counter = 0;
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
+        date += line.split(',')[0] + "\n";
+        matrix[0] = date.toStdString();
+
         QString str = line.split(',')[1];
 
          if(counter > 0){
              QString temp = str;//.split(',')[1];
              if(temp == "+")
                  break;
-             matrix += temp.toStdString()+",";
+             matrix[1] += temp.toStdString()+",";
          }
         counter++;
     }
     file.close();
 
-    matrix.erase(matrix.size()-1);
+    matrix[1].erase(matrix[1].size()-1);
 
     return matrix;
 }
 
-void salvarDados(QString nome)
+void salvarDados(QString nome, QString diasParaGrafico)
 {
+    QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
+
+
     //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 
     QTextStream stream(&file);
-    stream << "Saida,Saida_Estimada,Erro\n";
+    stream << "Data,Saida_Estimada,Saida,Erro\n";
     for(int i = 0; i < data.getNumberOfRows(); ++i){
+        stream << Date.toString("yyyy-MM-dd") << ',';
         for(int j = 0; j < data.getNumberOfColumns();++j)
             if(j < data.getNumberOfColumns()-1)
                 stream << QString::number(data(i,j)) << ',';
             else
                 stream << QString::number(data(i,j));
         stream << '\n';
+        Date = Date.addDays(1);
     }
 
     file.close();
@@ -245,16 +270,17 @@ int main()
 
     for(uint8_t i = 0; i < 2; ++i)
         for(uint8_t j = 0; j < 9; ++j){
-           std::string Output = pegarDados(tipoDados[i] + estados[j]);
-           std::string Input = pegarDados(isolamentoEstados + estados[j]);
-           //calculaModeloARMQ(matrix);
-           //calculaModeloARMQE(matrix);
-           calculaModeloARXMQ(Input, Output,0,0);
-           salvarDados(tipoDados[i] + estados[j]);
-           calculaModeloARXMQ(Input, Output,-50, 10);
-           salvarDados(tipoDados[i] + estados[j] + "50");
-           calculaModeloARXMQ(Input, Output,-75,10);
-           salvarDados(tipoDados[i] + estados[j] + "75");
+            std::string *Input = pegarDados(isolamentoEstados + estados[j]);
+            std::string *Output = pegarDados(tipoDados[i] + estados[j]);
+            //calculaModeloARMQ(matrix);
+            //calculaModeloARMQE(matrix);
+            calculaModeloARXMQ(Input[1], Output[1],0,0);
+            salvarDados(tipoDados[i] + estados[j], Output[0].c_str());
+            calculaModeloARXMQ(Input[1], Output[1],-50, 0);
+            salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str());
+            calculaModeloARXMQ(Input[1], Output[1],-75,0);
+            salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str());
+
         }
 
     return 0;
