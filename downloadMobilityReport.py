@@ -62,7 +62,7 @@ def writeDataCsV(filename_dest,state, stateName):
 
             writer.writerow([i[0], value])
 
-#getData(src,dest)
+getData(src,dest)
 BrazilMobility = splitData(dest+'Global_Mobility_Report.csv','residential_percent_change_from_baseline')
 #print(BrazilMobility)
 
