@@ -354,7 +354,7 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
         stream << Date.toString("yyyy-MM-dd") << ',';
         for(int j = 0; j < data.getNumberOfColumns();++j){
             QString temp;
-            if(i > 30 && data(i,j) == 0)
+            if(i > 40 && data(i,j) == 0)
                 temp = "+";
             else
                 temp = QString::number(data(i,j));

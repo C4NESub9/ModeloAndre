@@ -27,8 +27,8 @@ install:
 
 script:
   - python downloadfromMS.py
-  - python downloadMobilityReport.py
-  - python dataConverter.py  
+  - python dataConverter.py 
+  - python downloadMobilityReport.py 
   - qmake -project
   - qmake Covid_19_console.pro
   - make
