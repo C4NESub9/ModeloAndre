@@ -278,12 +278,12 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
 
 int main()
 {
-    QString estados[27] = {"AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An",      "RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An",    "MiG_An","EiS_An","RiJ_An","SiP_An",     "PiR_An","SiC_An","RiS_An",        "MiS_An","MiT_An","GiO_An","DiF_An"};
+    QString estados[28] = {"BiR_An", "AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An",      "RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An",    "MiG_An","EiS_An","RiJ_An","SiP_An",     "PiR_An","SiC_An","RiS_An",        "MiS_An","MiT_An","GiO_An","DiF_An"};
     QString tipoDados[2] = {"CA","OA"};
     QString isolamentoEstados = "GDM";
 
     for(uint8_t i = 0; i < 2; ++i)
-        for(uint8_t j = 0; j < 27; ++j){
+        for(uint8_t j = 0; j < 28; ++j){
             std::string *Input = pegarDados(isolamentoEstados + estados[j]);
             std::string *Output = pegarDados(tipoDados[i] + estados[j]);
             //calculaModeloARMQ(matrix);
