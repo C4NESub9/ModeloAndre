@@ -212,8 +212,8 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
 
 std::string* pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
 
@@ -247,8 +247,8 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
     QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
 
 
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
-    QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
+    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+    //QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
 
