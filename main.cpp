@@ -384,8 +384,9 @@ int main()
             std::string *Output = pegarDados(tipoDados[i] + estados[j].toStdString().c_str());
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
-            LinAlg::Matrix<double> data = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
-            salvarDados(tipoDados[i] + estados[j], Output[0].c_str(), data);
+            LinAlg::Matrix<double> data1 = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
+            //std::cout << data << std:endl;
+            salvarDados(tipoDados[i] + estados[j], Output[0].c_str(), data1);
             LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 10);
             salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data2);
             LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
