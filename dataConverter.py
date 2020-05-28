@@ -45,7 +45,9 @@ def getFilename(src):
 def CasosToNum(shortMonth):
     return{
             'CasosAcumulados' : 10,
+            'CasosNovos'      : 11,
             'obitosAcumulado' : 12,
+            'obitosNovos'     : 13,
             'Recuperadosnovos': 14,
             'emAcompanhamentoNovos': 15
     }[shortMonth]
@@ -138,6 +140,12 @@ def runAll(state,legend):
 
     Dict_data_casosAcumulados = splitData(filename_src,'Recuperadosnovos')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'RN',state,legend)
+
+    Dict_data_casosAcumulados = splitData(filename_src,'CasosNovos')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'CN',state,legend)
+
+    Dict_data_casosAcumulados = splitData(filename_src,'obitosNovos')
+    writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'ON',state,legend)
 
     Dict_data_casosAcumulados = splitData(filename_src,'emAcompanhamentoNovos')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
