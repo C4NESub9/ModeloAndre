@@ -180,7 +180,7 @@ filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd ' + './dataRaw/' + ' \n ls')
 #filename_src = './dataRaw/HIST_PAINEL_COVIDBR_28mai2020.csv'
 # Norte
-runBrasil('Brasil','BiR_An')
+#runBrasil('Brasil','BiR_An')
 
 runAll('RO','RiO_An')
 runAll('AC','AiC_An')
