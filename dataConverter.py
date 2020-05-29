@@ -59,16 +59,16 @@ def writeDataCsV(filename_dest,data,tipo,state,complement):
         stateDataRaw = data[state]
         #stateData = sumStateData(stateDataRaw)
 
-        valorAnterior = 0
+        #valorAnterior = 0
         writer.writerow(['Data', tipo])
         for i in stateDataRaw:
             if i[1] == '':
                 value = 0
             else:
                 value = int(i[1])
-            if valorAnterior > value:
-                break
-            valorAnterior = value
+            #if valorAnterior > value:
+            #    break
+            #valorAnterior = value
             writer.writerow([i[0], value])
         
         #for i in sorted(stateData):
@@ -178,7 +178,7 @@ def runBrasil(state,legend):
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
-#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_26mai2020.csv'
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_28mai2020.csv'
 # Norte
 runBrasil('Brasil','BiR_An')
 
