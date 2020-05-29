@@ -263,10 +263,10 @@ def TaxadeCrescimento(filename_src,file, title,yLabel):
     CN = readCSV(filename_src+'CN'+file+'.csv')
     CA = readCSV(filename_src+'CA'+file+'.csv')
 
-    x = pd.to_datetime(CA[0])
-    y = [(i / j) *100 for i, j in zip(CN[1], CA[1])] 
+    x = pd.to_datetime(CA[0][30:])
+    y = [(i / j) *100 for i, j in zip(CN[1][30:], CA[1][30:])] 
 
-    toPainel.setdefault('Taxa de Crescimento',[]).append (y[-1]) 
+    toPainel.setdefault('TaxadeCrescimento',[]).append (y[-1]) 
 
     x1 = CA[2]
     plot = plotConfiguration(x1,x,y,title,yLabel)
@@ -279,9 +279,12 @@ def FatordeCrescimento(filename_src,file, title,yLabel):
     
     CN = readCSV(filename_src+'CN'+file+'.csv') #Óbitos Novos tem q pegar da planilha
 
-    x = pd.to_datetime(CN[0])
-    y = [(i / j) *100 for i, j in zip(CN[1][1:], CN[1])] 
+    x = pd.to_datetime(CN[0][0:len(CN[1])-1])
+    y = [(i / (1+j)) *100 for i, j in zip(CN[1][1:len(CN[1])], CN[1][0:len(CN[1])-1])] 
     x1 = CN[2]
+
+    toPainel.setdefault('FatordeCrescimento',[]).append (y[-1]) 
+    
     plot = plotConfiguration(x1,x,y,title,yLabel)
     plot.circle(x, y, fill_color="white", size=2)
     hovertool = HoverTool(tooltips=[("x", "$x{%F}"),("y", "@y"),],formatters={'$x': 'datetime',})
@@ -337,8 +340,8 @@ for i in zip(stateListFile,stateList):
     obtosNovos              = ObtosNovos('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução de Óbitos Novos no Estado ' + i[1], 'Óbitos Novos')
     casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução de Casos Acumulados no Estado ' + i[1], 'Casos Acumulados')
     obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução de Óbitos Acumulados no Estado ' + i[1], 'Óbitos Acumulados')
-    #taxadeCrescimento       = TaxadeCrescimento('D:/Projetos/googleData/data/',i[0],"Evolução da Taxa de Crescimento no estado " + i[1], 'Taxa de Crescimento')
-    #fatordeCrescimento      = FatordeCrescimento('D:/Projetos/googleData/data/',i[0], 'Evolução do Fator de Crescimento no Estado ' + i[1], 'Fator de Crescimetno')
+    taxadeCrescimento       = TaxadeCrescimento('D:/Projetos/googleData/data/',i[0],"Evolução da Taxa de Crescimento no estado " + i[1], 'Taxa de Crescimento')
+    fatordeCrescimento      = FatordeCrescimento('D:/Projetos/googleData/data/',i[0], 'Evolução do Fator de Crescimento no Estado ' + i[1], 'Fator de Crescimetno')
     
     
     paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
@@ -349,8 +352,8 @@ for i in zip(stateListFile,stateList):
     paragraph6 = Paragraph(text="Óbitos Acumulados = " + "{:.{}f}".format(toPainel['ObitosAcumulados'][0],4))
     paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
     paragraph8 = Paragraph(text="Pessoas Contaminadas = " + "{:.{}f}".format(toPainel['PercentualContaminado'][0],4) + '%')
-    #paragraph9 = Paragraph(text="Taxa de Crescimento = " + "{:.{}f}".format(toPainel['TaxadeCrescimento'][0],4))
-    #paragraph10 = Paragraph(text="Fator de Crescimetno = " + "{:.{}f}".format(toPainel['FatordeCrescimento'][0],4))
+    paragraph9 = Paragraph(text="Taxa de Crescimento = " + "{:.{}f}".format(toPainel['TaxadeCrescimento'][0],4))
+    paragraph10 = Paragraph(text="Fator de Crescimetno = " + "{:.{}f}".format(toPainel['FatordeCrescimento'][0],4))
 
     l=grid([
     [select],
@@ -361,7 +364,7 @@ for i in zip(stateListFile,stateList):
     [casosAcumuladosComp, obitosAcumuladosComp],
     [letalidade, incidencia],
     [percentPopulContaminada,mortalidade],
-    #[taxadeCrescimento,fatordeCrescimento]
+    [taxadeCrescimento,fatordeCrescimento]
     ])
     show(l)
 
