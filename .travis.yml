@@ -24,6 +24,7 @@ install:
   - python -m pip install yagmail 
   - python -m pip install selenium	
   - python -m pip install xlrd
+  - python -m pip install unidecode
 
 script:
   - python downloadfromMS.py

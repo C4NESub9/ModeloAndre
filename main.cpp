@@ -230,14 +230,16 @@ LinAlg::Matrix<double> calculaModeloARXMQ(std::string matrixIn, std::string matr
         estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1), inputTemp = 0;
-    LinAlg::Matrix<double> predictOutput(1,10+atrasoEnvolvido);
+    LinAlg::Matrix<double> predictOutput(1,15+atrasoEnvolvido);
     for(unsigned i = 0; i < atrasoEnvolvido; ++i){
         inputTemp = Input(0,counter-2);
         temp = arx->sim(inputTemp,temp);
         predictOutput(0,i) = (int)temp;
     }
 
-    for(unsigned i = 0; i < 10; ++i){
+    if(ModelCoef(ModelCoef.getNumberOfRows()/2,0) < 0)
+        Isolamento = -Isolamento;
+    for(unsigned i = 0; i < 15; ++i){
         temp = arx->sim(Isolamento,temp);
         predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
@@ -263,19 +265,19 @@ LinAlg::Matrix<double> calculaModeloARXMQE(std::string matrixIn, std::string mat
         estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
 
     double temp = estOutput(0,counter-1), inputTemp = 0;
-    LinAlg::Matrix<double> predictOutput(1,10+atrasoEnvolvido);
+    LinAlg::Matrix<double> predictOutput(1,15+atrasoEnvolvido);
     for(unsigned i = 0; i < atrasoEnvolvido; ++i){
         inputTemp = Input(0,counter-2);
         temp = arx->sim(inputTemp,temp);
         predictOutput(0,i) = (int)temp;
     }
 
-    for(unsigned i = 0; i < 10; ++i){
+    for(unsigned i = 0; i < 15; ++i){
         temp = arx->sim(Isolamento,temp);
         predictOutput(0,i+atrasoEnvolvido) = (int)temp;
     }
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)|predictOutput))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
-    //std::cout << data << std::endl;
+    std::cout << data << std::endl;
     //std::cout << arx->print() << std::endl;
     return data;
 }
@@ -375,6 +377,7 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
 int main()
 {                                      /* Nordeste*/                                                                         /* Norte*/                                                     /* Suldeste*/                        /* Sul*/                   /* Centro-oeste*/
     QStringList estados = {"BiR_An", "AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An","RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An","MiG_An","EiS_An","RiJ_An","SiP_An","PiR_An","SiC_An","RiS_An","MiS_An","MiT_An","GiO_An","DiF_An"};
+    QStringList municipios = {"BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBSiuiai","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii","MiACixiai"}; //"PiIPicisi","PiISioiRiiiuidioiaioi",
     QString tipoDados[2] = {"CA","OA"};
     QString isolamentoEstados = "GDM";
 
@@ -384,15 +387,40 @@ int main()
             std::string *Output = pegarDados(tipoDados[i] + estados[j].toStdString().c_str());
             //calculaModeloARMQ(matrix);
             //calculaModeloARMQE(matrix);
-            LinAlg::Matrix<double> data1 = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
+            LinAlg::Matrix<double> data1 = calculaModeloARXMQ(Input[1], Output[1], 0, 0);
             //std::cout << data << std:endl;
             salvarDados(tipoDados[i] + estados[j], Output[0].c_str(), data1);
-            LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 10);
+            LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 0);
             salvarDados(tipoDados[i] + estados[j] + "50", Output[0].c_str(), data2);
-            LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
+            LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 0);
             salvarDados(tipoDados[i] + estados[j] + "75", Output[0].c_str(), data3);
-            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 15);
+            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 0);
             salvarDados(tipoDados[i] + estados[j] + "PN", Output[0].c_str(), data4);
+
+            LinAlg::Matrix<double> data5 = calculaModeloARXMQ(Input[1], Output[1], -60, 0);
+            salvarDados(tipoDados[i] + estados[j] + "60", Output[0].c_str(), data5);
+        }
+
+    for(uint8_t i = 0; i < 2; ++i)
+        for(uint8_t j = 0; j < municipios.count(); ++j){
+            std::string *Input = pegarDados(isolamentoEstados + municipios[j][0]+ municipios[j][1]+ municipios[j][2] + "_An");
+            std::string *Output = pegarDados(tipoDados[i] + municipios[j].toStdString().c_str());
+            LinAlg::Matrix<double> Out = Output[1];
+            //calculaModeloARMQ(matrix);
+            //calculaModeloARMQE(matrix);
+            LinAlg::Matrix<double> data1 = calculaModeloARXMQ(Input[1], Output[1], 0, 10);
+            //std::cout << data << std:endl;
+            salvarDados(tipoDados[i] + municipios[j], Output[0].c_str(), data1);
+            LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 10);
+            salvarDados(tipoDados[i] + municipios[j] + "50", Output[0].c_str(), data2);
+            LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 10);
+            salvarDados(tipoDados[i] + municipios[j] + "75", Output[0].c_str(), data3);
+            LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 15);
+            salvarDados(tipoDados[i] + municipios[j] + "PN", Output[0].c_str(), data4);
+
+            LinAlg::Matrix<double> data5 = calculaModeloARXMQ(Input[1], Output[1], -60, 10);
+            salvarDados(tipoDados[i] + municipios[j] + "60", Output[0].c_str(), data5);
+            std::cout << municipios[j].toStdString().c_str();
         }
 
     return 0;
