@@ -269,7 +269,7 @@ municipioListPE = ['Recife', 'Petrolina', 'Caruaru']
 municipioListPB = ['João Pessoa', 'Campina Grande', 'Sousa', 'Patos']
 municipioListRN = ['Natal', 'Mossoró']
 municipioListCE = ['Fortaleza','Juazeiro do Norte', 'Sobral']
-municipioListPI = ['Teresina','Picos','São Raimundo Nonato']
+municipioListPI = ['Teresina'] #'Picos','São Raimundo Nonato'
 municipioListMA = ['São Luís', 'Imperatriz', 'Caxias']
 
 
