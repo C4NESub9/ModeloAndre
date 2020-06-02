@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import csv
 from unicodedata import normalize
+from unidecode import unidecode
+import datetime
 
 from bokeh.layouts import column, grid, gridplot
 from bokeh.models import ColumnDataSource, CustomJS, Slider, Select, Div, Paragraph, Span
@@ -17,6 +19,7 @@ regioes = ['Norte','Nordeste','Sul','Suldeste','Centro-Oeste']
 
 stateListFileNordeste = ["AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"]
 stateListNordeste = ['do Alagoas', 'da Bahia', 'do Ceará', 'do Maranhão', 'da Paraíba', 'de Pernambuco', 'do Piauí', 'do Rio Grande do Norte', 'de Sergipe']
+
 
 stateListFileNorte = ["RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An"]
 stateListNorte = ['de Rondônia', 'do Acre' , 'do Amazonas' , 'de Roraima', 'do Pará', 'do Amapá', 'do Tocantins']
@@ -43,7 +46,7 @@ for i in stateListFile:
 
 selecaoHTML = '<select id="16131" onchange="location = this.value;"><option value="">Selecione uma das Opções a Seguir</option><option value="'+ regioes[0]+'.html'+'">Estados do '+ regioes[0] +'</option><option value="'+ regioes[1]+'.html'+'">Estados do '+ regioes[1] +'</option><option value="'+ regioes[2]+'.html'+'">Estados do '+ regioes[2] +'</option><option value="'+ regioes[3]+'.html'+'">Estados do '+ regioes[3] +'</option><option value="'+ regioes[4]+'.html'+'">Estados do '+ regioes[4] +'</option><option value="'+ path2stateListFile[0]+'">Estado do Alagoas</option><option   value="'+ path2stateListFile[1]+'">Estado da Bahia</option><option   value="'+ path2stateListFile[2]+'">Estado do Ceará</option><option   value="'+ path2stateListFile[3]+'">Estado do Maranhão</option><option   value="'+ path2stateListFile[4]+'">Estado da Paraíba</option><option   value="'+ path2stateListFile[5]+'">Estado de Pernambuco</option><option   value="'+ path2stateListFile[6]+'">Estado do Piauí</option><option   value="'+ path2stateListFile[7]+'">Estado do Rio Grande do Norte</option><option   value="'+ path2stateListFile[8]+'">Estado de Sergipe</option><option   value="'+ path2stateListFile[9]+'">Estado de Rondônia</option><option   value="'+ path2stateListFile[10]+'">Estado do Acre</option><option   value="'+ path2stateListFile[11]+'">Estado do Amazonas</option><option   value="'+ path2stateListFile[12]+'">Estado de Roraima</option><option   value="'+ path2stateListFile[13]+'">Estado do Pará</option><option   value="'+ path2stateListFile[14]+'">Estado do Amapá</option><option   value="'+ path2stateListFile[15]+'">Estado do Tocantins</option><option   value="'+ path2stateListFile[16]+'">Estado de Minas Gerais</option><option   value="'+ path2stateListFile[17]+'">Estado do Espírito Santo</option><option   value="'+ path2stateListFile[18]+'">Estado do Rio de Janeiro</option><option   value="'+ path2stateListFile[19]+'">Estado de São Paulo</option><option   value="'+ path2stateListFile[20]+'">Estado do Paraná</option><option   value="'+ path2stateListFile[21]+'">Estado de Santa Catarina</option><option   value="'+ path2stateListFile[22]+'">Estado do Rio Grande do Sul</option><option   value="'+ path2stateListFile[23]+'">Estado do Mato Grosso do Sul</option><option   value="'+ path2stateListFile[24]+'">Estado do Mato Grosso</option><option   value="'+ path2stateListFile[25]+'">Estado de Goiás</option></select>'
 
-
+stateListNordesteAbrev = ['BA','SE','AL','PE','PB','RN','CE','PI','MA']
 municipioListBA = ['Salvador', 'Feira de Santana', 'Vitória da Conquista', 'Itabuna', 'Juazeiro']
 municipioListSE = ['Aracaju', 'Itabaiana', 'Estância', 'Lagarto']
 municipioListAL = ['Maceió', 'Arapiraca','Murici', 'Coruripe', 'Palmeira dos Índios']
@@ -53,14 +56,15 @@ municipioListRN = ['Natal', 'Mossoró']
 municipioListCE = ['Fortaleza','Juazeiro do Norte', 'Sobral']
 municipioListPI = ['Teresina','Picos','São Raimundo Nonato']
 municipioListMA = ['São Luís', 'Imperatriz', 'Caxias']
-municipiosFileList = ["BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBSiuiai","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii","MiACixiai"]
-municipiosList = [municipioListBA+municipioListSE+municipioListAL+municipioListPE+municipioListPB+municipioListRN+municipioListCE+['Teresina']+municipioListMA]
-municipiosList = municipiosList[0]
+municipiosFileList = [["BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri"],["SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi"],["AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi"],["PiERicifi","PiEPitioiiiai","PiECiriaiui"],["PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBSiuiai","PiBPitisi"],["RiNNitili","RiNMisioioi"],["CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai"],["PiITirisini"],["MiASioiLiii","MiAIipiritiii","MiACixiai"]]
+municipiosList = [municipioListBA,municipioListSE,municipioListAL,municipioListPE,municipioListPB,municipioListRN,municipioListCE,['Teresina'],municipioListMA]
+#municipiosList = municipiosList[0]
 
 selecaoMunicipiosHTML = '<select id="16131" onchange="location = this.value;"><option>Selecione uma das Opções a Seguir</option>'
 
-for municipio in zip(municipiosList,municipiosFileList):
-    selecaoMunicipiosHTML = selecaoMunicipiosHTML+'<option value="'+ municipio[1]+'.html'+'">Municipio: '+ municipio[0] +'</option>'
+for estado in zip(municipiosList,municipiosFileList):
+    for municipio in zip(estado[0],estado[1]):
+        selecaoMunicipiosHTML = selecaoMunicipiosHTML+'<option value="'+ municipio[1]+'.html'+'">Municipio: '+ municipio[0] +'</option>'
 
 selecaoMunicipiosHTML = selecaoMunicipiosHTML+'</select>'
 
@@ -172,16 +176,91 @@ def plotConfiguration(x1,x,y,title,ylabel):
     plot.xaxis.ticker = FixedTicker(ticks=temp)
     return plot
 
+def getAlbertoData(filename_src):
+    Dict_data = dict()
+    with open(filename_src, "r", encoding="utf8", newline="") as f:
+        reader = csv.reader(f,delimiter=",")
+
+        flag = True
+        for row in reader: 
+            if flag:
+                flag = False
+                continue
+            Dict_data.setdefault(unidecode(row[0]),[]).append ([ row[1],row[2],row[3] ]) 
+    return Dict_data
+
+def plotAlberto(plot,data,local):
+    data = data.get(unidecode(local), "empty")
+    if data == 'empty':
+        return
+    time = list()
+    y = list()
+    value = 0
+    counter = 0
+    importantDates = list()
+    timeTemp = ''
+    for row in data:
+        timeTemp = datetime.datetime.strptime(row[0], '%d/%m/%Y').strftime('20%y-%m-%d')
+        time.append(timeTemp)
+        if row[2] == '':
+            value = 0
+        else:
+            value = float(row[2])
+        y.append(value)
+        if counter%7 == 0:
+            counter = 0
+            importantDates.append(row[0])
+        counter = counter + 1
+    x = pd.to_datetime(time)
+    plot.line(x,y, line_width=1.5, line_alpha=0.6,legend_label='Projeções Modelo 2',line_color=Spectral6[1],line_dash="4 4")
+    tick_vals = pd.to_datetime(importantDates).astype(int) / 10**6
+    #plot.xaxis.ticker = FixedTicker(ticks=list(tick_vals))
+    temp = list(tick_vals)
+    plot.xaxis.ticker = FixedTicker(ticks=temp)
+    return plot
+
+def plotMarcus(plot,data,local):
+    data = data.get(unidecode(local), "empty")
+    if data == 'empty':
+        return
+    time = list()
+    y = list()
+    value = 0
+    counter = 0
+    importantDates = list()
+    timeTemp = ''
+    for row in data:
+        timeTemp = row[0]
+        time.append(timeTemp)
+        if row[2] == '':
+            value = 0
+        else:
+            value = float(row[2])
+        y.append(value)
+        if counter%7 == 0:
+            counter = 0
+            importantDates.append(row[0])
+        counter = counter + 1
+    x = pd.to_datetime(time)
+    plot.line(x,y, line_width=2.5, line_alpha=0.6,legend_label='Projeções Modelo 3',line_color=Spectral6[2],line_dash="4 4")
+    tick_vals = pd.to_datetime(importantDates).astype(int) / 10**6
+    #plot.xaxis.ticker = FixedTicker(ticks=list(tick_vals))
+    temp = list(tick_vals)
+    plot.xaxis.ticker = FixedTicker(ticks=temp)
+    return plot
+
 def getAllData(filename_src,file,population,filename_srcPredictions):
     #x = readCSV(filename_src+'OA'+file+'.csv')[0]
     GDM = readCSV(filename_src+'GDM'+file+'.csv')
     CAP = readCSV(filename_srcPredictions+'CA'+file+'P.csv')
     CAP50 = readCSV(filename_srcPredictions+'CA'+file+'50P.csv')
     CAP75 = readCSV(filename_srcPredictions+'CA'+file+'75P.csv')
+    CAP60 = readCSV(filename_srcPredictions+'CA'+file+'60P.csv')
 
     OAP = readCSV(filename_srcPredictions+'OA'+file+'P.csv')
     OAP50 = readCSV(filename_srcPredictions+'OA'+file+'50P.csv')
     OAP75 = readCSV(filename_srcPredictions+'OA'+file+'75P.csv')
+    OAP60 = readCSV(filename_srcPredictions+'OA'+file+'60P.csv')
 
     OA = readCSV(filename_src+'OA'+file+'.csv')
     CA = readCSV(filename_src+'CA'+file+'.csv')
@@ -193,7 +272,7 @@ def getAllData(filename_src,file,population,filename_srcPredictions):
     mortalidade = [ON[0],[(i / population) *100000 for i in ON[1] ]]
     taxaCrescimento = [CN[0],[(i /(1+j)) *100 for i, j in zip(CN[1], CA[1])] ]
     fatorCrescimento = [CN[0][0:len(CN)-1],[(i / (1+j)) *100 for i, j in zip(CN[1][1:len(CN[1])], CN[1][0:len(CN[1])-1])]]
-    acumulatedData.setdefault(file,[]).append ([OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP,CAP50,OAP50,CAP75,OAP75]) 
+    acumulatedData.setdefault(file,[]).append ([OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP,CAP50,OAP50,CAP60,OAP60,CAP75,OAP75]) 
     return acumulatedData
 
 def Letalidade(filename_src,file,title,yLabel):
@@ -365,27 +444,28 @@ def FatordeCrescimento(filename_src,file, title,yLabel):
     plot.add_tools(hovertool)
     return plot
 
-def comparacoCenarios(filename_src,title,yLabel):
+def comparacoCenarios(filename_src,title,yLabel,removelastData = 0):
     
     
     A = readCSV(filename_src+'P.csv')
     B = readCSV(filename_src+'50P.csv')
     C = readCSV(filename_src+'75P.csv')
     D = readCSV(filename_src+'60P.csv')
+    
     #D = readCSV(filename_src+'PNP.csv')
 
     x = pd.to_datetime(A[0])
     plot = figure(plot_height=320, x_axis_type='datetime', title=title)
-    plot.line(x=x,y=A[1], line_width=2, line_alpha=0.6,legend_label='Mantida no Último Valor',line_color=Spectral6[0])
-    plot.circle(x, A[1], fill_color = Spectral6[0], size=2)
-    plot.line(x=x,y=B[1], line_width=2, line_alpha=0.6,legend_label='50% do valor Normal',line_color=Spectral6[0],line_dash="4 4")
+    plot.line(x=x,y=A[1][0:len(A[1])-removelastData], line_width=2, line_alpha=0.6,legend_label='Mantida no Último Valor',line_color=Spectral6[0])
+    plot.circle(x, A[1][0:len(A[1])-removelastData], fill_color = Spectral6[0], size=2)
+    plot.line(x=x,y=B[1][0:len(B[1])-removelastData], line_width=2, line_alpha=0.6,legend_label='50% do valor Normal',line_color=Spectral6[0],line_dash="4 4")
     #plot.circle(x, B[1], fill_color=Spectral6[1], size=2)
-    plot.line(x=x,y=C[1], line_width=1.5, line_alpha=0.6,legend_label='70% do valor Normal',line_color=Spectral6[0],line_dash="4 4")
+    plot.line(x=x,y=C[1][0:len(C[1])-removelastData], line_width=1.5, line_alpha=0.6,legend_label='70% do valor Normal',line_color=Spectral6[0],line_dash="4 4")
 
-    plot.line(x=x,y=D[1], line_width=1.5, line_alpha=0.6,legend_label='60% do valor Normal',line_color=Paired10[4])
+    plot.line(x=x,y=D[1][0:len(D[1])-removelastData], line_width=1.5, line_alpha=0.6,legend_label='60% do valor Normal',line_color=Paired10[4])
     #plot.circle(x, C[1], fill_color=Spectral6[2], size=2)
     #plot.line(x=x[0:len(D[1])],y=D[1], line_width=3, line_alpha=0.6,legend_label='Dados de Validação de 15 dias anteriores',line_color=Spectral6[3])
-    Prediction = Span(location=x[-16],dimension='height', line_color='black',line_dash='dashed', line_width=0.5)
+    Prediction = Span(location=x[-16-removelastData],dimension='height', line_color='black',line_dash='dashed', line_width=0.5)
     plot.add_layout(Prediction)
     #Prediction = Span(location=x[-21],dimension='height', line_color='black',line_dash='dashed', line_width=0.5)
     #plot.add_layout(Prediction)
@@ -439,7 +519,7 @@ def geracaoPorEstado(region,stateListFile,stateList,data,Titulos,yLabel):
 
     select = Div(text=selecaoHTML)
     selectmunicipio = Div(text=selecaoMunicipiosHTML)
-    l=grid([[select, selectmunicipio],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]]])
+    l=grid([[select, selectmunicipio],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
     show(l)
 
 
@@ -453,20 +533,20 @@ for i in zip(stateListFile,stateList):
     select = Div(text=selecaoHTML)
     selectmunicipio = Div(text=selecaoMunicipiosHTML)
 
-    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+'CA'+i[0],"Casos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
-    obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
-    letalidade              = Letalidade('D:/Projetos/ModeloAndre/data/',i[0],"Evolução da Letalidade no estado " + i[1],"Letalidade em porcentagens")
-    incidencia              = Incidencia('D:/Projetos/ModeloAndre/data/',i[0], statelist2Population(i[0]), 'Evolução da Incidência no Estado ' + i[1], 'Incidência')
-    percentPopulContaminada = PercentPopulContaminada('D:/Projetos/ModeloAndre/data/',i[0], statelist2Population(i[0]), 'Evolução da Percentual da População Contaminada no Estado ' + i[1], 'População Contaminada')
-    mortalidade             = Mortalidade('D:/Projetos/ModeloAndre/data/',i[0], statelist2Population(i[0]), 'Evolução da Mortalidade no Estado ' + i[1],'Mortalidade')
-    casosNovos              = CasosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Novos no Estado ' + i[1], 'Casos Novos')
-    obtosNovos              = ObtosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Novos no Estado ' + i[1], 'Óbitos Novos')
-    casosAcumulados         = CasosAcumulados('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Acumulados no Estado ' + i[1], 'Casos Acumulados')
-    obtosAcumulados         = ObitosAcumulados('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Acumulados no Estado ' + i[1], 'Óbitos Acumulados')
-    taxadeCrescimento       = TaxadeCrescimento('D:/Projetos/ModeloAndre/data/',i[0],"Evolução da Taxa de Crescimento no estado " + i[1], 'Taxa de Crescimento')
-    fatordeCrescimento      = FatordeCrescimento('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução do Fator de Crescimento no Estado ' + i[1], 'Fator de Crescimetno')
-    mobilidade              = Mobilidade('D:/Projetos/ModeloAndre/data/',i[0], "Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) no Estado ",'Mobilidade Residencial')
-    acumulatedData[i[0]]    = getAllData('D:/Projetos/ModeloAndre/data/',i[0],statelist2Population(i[0]),'D:/Projetos/ModeloAndre/dataAn/')[i[0]]
+    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'CA'+i[0],"Casos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
+    obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
+    letalidade              = Letalidade('D:/Projetos/googleData/data/',i[0],"Evolução da Letalidade no estado " + i[1],"Letalidade em porcentagens")
+    incidencia              = Incidencia('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução da Incidência no Estado ' + i[1], 'Incidência')
+    percentPopulContaminada = PercentPopulContaminada('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução da Percentual da População Contaminada no Estado ' + i[1], 'População Contaminada')
+    mortalidade             = Mortalidade('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução da Mortalidade no Estado ' + i[1],'Mortalidade')
+    casosNovos              = CasosNovos('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Novos no Estado ' + i[1], 'Casos Novos')
+    obtosNovos              = ObtosNovos('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Novos no Estado ' + i[1], 'Óbitos Novos')
+    casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Acumulados no Estado ' + i[1], 'Casos Acumulados')
+    obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Acumulados no Estado ' + i[1], 'Óbitos Acumulados')
+    taxadeCrescimento       = TaxadeCrescimento('D:/Projetos/googleData/data/',i[0],"Evolução da Taxa de Crescimento no estado " + i[1], 'Taxa de Crescimento')
+    fatordeCrescimento      = FatordeCrescimento('D:/Projetos/googleData/data/',i[0], 'Evolução do Fator de Crescimento no Estado ' + i[1], 'Fator de Crescimetno')
+    mobilidade              = Mobilidade('D:/Projetos/googleData/data/',i[0], "Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) no Estado ",'Mobilidade Residencial')
+    acumulatedData[i[0]]    = getAllData('D:/Projetos/googleData/data/',i[0],statelist2Population(i[0]),'D:/Projetos/googleData/dataAn/')[i[0]]
     
     paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
     paragraph2 = Paragraph(text="Casos Novos = " +"{:.{}f}".format(toPainel['CasosNovos'][0],4))
@@ -491,10 +571,10 @@ for i in zip(stateListFile,stateList):
     [percentPopulContaminada,mortalidade],
     [taxadeCrescimento,fatordeCrescimento]
     ])
-    #break
+    break
     show(l) 
 
-Titulos = [ #OA,CA,CN,ON,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP
+Titulos = [ #OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP,CAP50,OAP50,CAP75,OAP75]
     "Evolução de Óbitos Acumulados nos Estados do ",
     "Evolução de Casos Acumulados nos Estados do ",
     'Evolução de Casos Novos nos Estados do ',
@@ -510,6 +590,8 @@ Titulos = [ #OA,CA,CN,ON,letalidade,incidencia,popContaminada,mortalidade,taxaCr
     "Predição de Óbitos Acumulados nos Estados do ",
     "Predição com 50% de intervenção de Casos Acumulados nos Estados do ",
     "Predição com 50% de intervenção de Óbitos Acumulados nos Estados do ",
+    "Predição com 60% de intervenção de Casos Acumulados nos Estados do ",
+    "Predição com 60% de intervenção de Óbitos Acumulados nos Estados do ",
     "Predição com 75% de intervenção de Casos Acumulados nos Estados do ",
     "Predição com 75% de intervenção de Óbitos Acumulados nos Estados do ",
 ]
@@ -531,41 +613,52 @@ yLabel = [
     "Óbitos Acumulados",
     "Casos Acumulados",
     "Óbitos Acumulados",
+    "Casos Acumulados",
+    "Óbitos Acumulados",
     "Casos Acumulados"
 ]
 
-for i in zip(regioes,listOfRegionsFiles,listOfRegions):
-    geracaoPorEstado(i[0],i[1],i[2],acumulatedData,Titulos,yLabel)
+#for i in zip(regioes,listOfRegionsFiles,listOfRegions):
+#    geracaoPorEstado(i[0],i[1],i[2],acumulatedData,Titulos,yLabel)
 
 
 #municipios
 acumulatedData = dict()
 conjuntodePlots = list()
-for i in zip(municipiosFileList,municipiosList): 
-    
-    output_file('./dashboard/'+ i[0] + '.html')
-    
-    select = Div(text=selecaoHTML)
-    selectmunicipio = Div(text=selecaoMunicipiosHTML)
+OA_Alberto = getAlbertoData("D:/Projetos/ModeloAlberto/Dados/OA_AL.csv")
+CA_Alberto = getAlbertoData("D:/Projetos/ModeloAlberto/Dados/CA_AL.csv")
+OA_Marcus = getAlbertoData('D:/Projetos/covid-br-model-epiforecasts/_nowcasts/covid-regional/brazil/cities-summary/cases.csv')
 
-    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+'CA'+i[0],"Casos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
-    obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
-    #casosNovos              = CasosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Novos no Municipio:  ' + i[1], 'Casos Novos')
-    #obtosNovos              = ObtosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Novos no Municipio:  ' + i[1], 'Óbitos Novos')
-    #casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Acumulados no Municipio:  ' + i[1], 'Casos Acumulados')
-    #obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Acumulados no Municipio:  ' + i[1], 'Óbitos Acumulados')
-    
-    #paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
-    #paragraph2 = Paragraph(text="Casos Novos = " +"{:.{}f}".format(toPainel['CasosNovos'][0],4))
-    #paragraph6 = Paragraph(text="Óbitos Acumulados = " + "{:.{}f}".format(toPainel['ObitosAcumulados'][0],4))
-   # paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
-    paragraphOBS = Paragraph(text= predictionObservations)
-    l=grid([
-    [select,selectmunicipio],
-    #[paragraph1,paragraph2,paragraph6,paragraph7],
-    [casosAcumuladosComp, obitosAcumuladosComp],
-    [paragraphOBS],
-    #[casosNovos, obtosNovos]
-    ])
-    #break
-    show(l)
+
+for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)): 
+    for i in zip(j[0],j[1]):
+        output_file('./dashboard/'+ i[0] + '.html')
+        
+        select = Div(text=selecaoHTML)
+        selectmunicipio = Div(text=selecaoMunicipiosHTML)
+
+        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'CA'+i[0],"Casos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
+        plotAlberto(casosAcumuladosComp,CA_Alberto,i[1])
+
+        obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
+        plotAlberto(obitosAcumuladosComp,OA_Alberto,i[1])
+        plotMarcus(obitosAcumuladosComp,OA_Marcus,stateListNordesteAbrev[j[2]]+'-'+i[1])
+        #casosNovos              = CasosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Novos no Municipio:  ' + i[1], 'Casos Novos')
+        #obtosNovos              = ObtosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Novos no Municipio:  ' + i[1], 'Óbitos Novos')
+        #casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Acumulados no Municipio:  ' + i[1], 'Casos Acumulados')
+        #obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Acumulados no Municipio:  ' + i[1], 'Óbitos Acumulados')
+        
+        #paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
+        #paragraph2 = Paragraph(text="Casos Novos = " +"{:.{}f}".format(toPainel['CasosNovos'][0],4))
+        #paragraph6 = Paragraph(text="Óbitos Acumulados = " + "{:.{}f}".format(toPainel['ObitosAcumulados'][0],4))
+    # paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
+        paragraphOBS = Paragraph(text= predictionObservations)
+        l=grid([
+        [select,selectmunicipio],
+        #[paragraph1,paragraph2,paragraph6,paragraph7],
+        [casosAcumuladosComp, obitosAcumuladosComp],
+        [paragraphOBS],
+        #[casosNovos, obtosNovos]
+        ])
+        #break
+        show(l)

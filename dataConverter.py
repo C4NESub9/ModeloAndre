@@ -66,7 +66,7 @@ def writeDataCsV(filename_dest,data,tipo,state,complement):
             if i[1] == '':
                 value = 0
             else:
-                value = int(i[1])
+                value = float(i[1])
             #if valorAnterior > value:
             #    break
             #valorAnterior = value
