@@ -436,17 +436,17 @@ int main()
         LinAlg::Matrix<double> Out = Output[1];
         //calculaModeloARMQ(matrix);
         //calculaModeloARMQE(matrix);
-        LinAlg::Matrix<double> data1 = calculaModeloARXMQ(Input[1], Output[1], 0, 0);
+        LinAlg::Matrix<double> data1 = calculaModeloARXMQE(Input[1], Output[1], 0, 0);
         //std::cout << data << std:endl;
         salvarDados(RegioesSaude[j], Output[0].c_str(), data1);
-        LinAlg::Matrix<double> data2 = calculaModeloARXMQ(Input[1], Output[1], -50, 0);
+        LinAlg::Matrix<double> data2 = calculaModeloARXMQE(Input[1], Output[1], -50, 0);
         salvarDados(RegioesSaude[j] + "50", Output[0].c_str(), data2);
-        LinAlg::Matrix<double> data3 = calculaModeloARXMQ(Input[1], Output[1], -75, 0);
+        LinAlg::Matrix<double> data3 = calculaModeloARXMQE(Input[1], Output[1], -75, 0);
         salvarDados(RegioesSaude[j] + "75", Output[0].c_str(), data3);
         LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 15);
         salvarDados(RegioesSaude[j] + "PN", Output[0].c_str(), data4);
 
-        LinAlg::Matrix<double> data5 = calculaModeloARXMQ(Input[1], Output[1], -60, 0);
+        LinAlg::Matrix<double> data5 = calculaModeloARXMQE(Input[1], Output[1], -60, 0);
         salvarDados(RegioesSaude[j] + "60", Output[0].c_str(), data5);
     }
 
