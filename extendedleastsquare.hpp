@@ -75,8 +75,15 @@ void OptimizationHandler::ExtendedLeastSquare<Type>::Optimize(LinAlg::Matrix<Typ
         //std::cout << (yest) << std::endl;
         //for(int j = 0; j < yest.getNumberOfColumns(); ++j)
         //    e(0,j) = Output(0,j-1)-yest(j,0);
-        e = (~(B-yest));
+        //e = (~(B-yest));
         //std::cout << (~e) << std::endl;
+
+        ModelHandler::ARX<double> arx(this->model->getModelCoef().getNumberOfRows()/2,this->model->getModelCoef().getNumberOfRows()/2);
+        arx.setModelCoef(this->model->getModelCoef());
+        arx.setInitialOutputValue(Output(0,0));
+        e = Output(0,0)*LinAlg::Ones<double>(1,e.getNumberOfColumns());
+        for(unsigned i = 1+this->model->getModelCoef().getNumberOfRows()/2; i < e.getNumberOfColumns(); ++i)
+            e(0,i) = int(arx.sim(Input(0,i-1),Output(0,i-2)));
         this->error = e;
     }
     this->model->setModelCoef(MQEModelCoef(from(0)-->MQEModelCoef.getNumberOfRows()-ne-1,0));

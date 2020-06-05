@@ -276,7 +276,7 @@ def getAllData(filename_src,file,population,filename_srcPredictions):
     CA = readCSV(filename_src+'CA'+file+'.csv')
     CN = readCSV(filename_src+'CN'+ file +'.csv')
     ON = readCSV(filename_src+'ON'+file+'.csv') 
-    letalidade = [OA[0],[(i / j) *100 for i, j in zip(OA[1], CA[1])]] 
+    letalidade = [OA[0],[(i / (1+j)) *100 for i, j in zip(OA[1], CA[1])]] 
     incidencia = [CN[0],[(i / population) *100000 for i in CN[1] ]]
     popContaminada = [CA[0],[(i / population) *100 for i in CA[1]]]
     mortalidade = [ON[0],[(i / population) *100000 for i in ON[1] ]]
@@ -295,7 +295,7 @@ def Letalidade(filename_src,file,title,yLabel):
     toPainel.setdefault('CasosAcumulados',[]).append (CA[1][-1]) 
 
     x = pd.to_datetime(OA[0])
-    y = [(i / j) *100 for i, j in zip(OA[1], CA[1])] 
+    y = [(i / (1+j)) *100 for i, j in zip(OA[1], CA[1])] 
 
     toPainel.setdefault('Letalidade',[]).append (y[-1]) 
 
@@ -533,7 +533,7 @@ def geracaoPorEstado(region,stateListFile,stateList,data,Titulos,yLabel):
     l=grid([[select, selectmunicipio,selectRegiao],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
     show(l)
 
-'''
+
 acumulatedData = dict()
 conjuntodePlots = list()
 for i in zip(stateListFile,stateList): 
@@ -652,30 +652,19 @@ for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)):
 
         obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
         plotAlberto(obitosAcumuladosComp,OA_Alberto,i[1])
-        
-        #casosNovos              = CasosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Novos no Municipio:  ' + i[1], 'Casos Novos')
-        #obtosNovos              = ObtosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Novos no Municipio:  ' + i[1], 'Óbitos Novos')
-        #casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Acumulados no Municipio:  ' + i[1], 'Casos Acumulados')
-        #obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Acumulados no Municipio:  ' + i[1], 'Óbitos Acumulados')
-        
-        #paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
-        #paragraph2 = Paragraph(text="Casos Novos = " +"{:.{}f}".format(toPainel['CasosNovos'][0],4))
-        #paragraph6 = Paragraph(text="Óbitos Acumulados = " + "{:.{}f}".format(toPainel['ObitosAcumulados'][0],4))
-        # paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
+
         paragraphOBS = Paragraph(text= predictionObservations)
         selectRegiao = Div(text=selecaoRegiaoHTML)
 
         l=grid([
         [select,selectmunicipio,selectRegiao],
-        #[paragraph1,paragraph2,paragraph6,paragraph7],
         [casosAcumuladosComp, obitosAcumuladosComp],
         [paragraphOBS],
-        #[casosNovos, obtosNovos]
         ])
         #break
         show(l)
 
-'''
+
 
 #Regioes de Saude
 # datas estão começando erradas das predições
@@ -689,11 +678,11 @@ for j in RegioesSaude:
     selectmunicipio = Div(text=selecaoMunicipiosHTML)
     selectRegiao = Div(text=selecaoRegiaoHTML)
 
-    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Casos: " + j,"Casos")
+    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+ j,"Casos: " + j,"Casos")
     if j[6] == 'C':
-        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Casos Acumulados: " + j,"Casos Acumulados")
+        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+ j,"Casos Acumulados: " + j,"Casos Acumulados")
     else:
-        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Óbitos Acumulados: " + j,"Óbitos Acumulados")
+        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+ j,"Óbitos Acumulados: " + j,"Óbitos Acumulados")
     paragraphOBS = Paragraph(text= predictionObservations)
     l=grid([
     [select,selectmunicipio,selectRegiao],

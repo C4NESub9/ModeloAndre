@@ -1,6 +1,7 @@
 #ifndef ELS_H
 #define ELS_H
 #include "SistemasdeControle/headers/optimizationLibs/leastsquare.h"
+#include "SistemasdeControle/headers/modelLibs/arx.h"
 
 namespace OptimizationHandler{
 
