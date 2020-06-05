@@ -4,6 +4,8 @@ import csv
 from unicodedata import normalize
 from unidecode import unidecode
 import datetime
+from datetime import timedelta 
+import time 
 
 from bokeh.layouts import column, grid, gridplot
 from bokeh.models import ColumnDataSource, CustomJS, Slider, Select, Div, Paragraph, Span
@@ -12,6 +14,13 @@ from bokeh.models import FixedTicker, HoverTool
 from bokeh.palettes import Spectral6, Paired10
 import webbrowser
 # Variáveis Globais
+RegioesSaude = ["NERNRSCA24004", "NERNRSCA24008", "NERNRSCA24003", "NERNRSCA24006", "NERNRSCA24002", "NERNRSCA24001", "NERNRSCA24005", "NERNRSCA24007","NERNRSOA24004", "NERNRSOA24008", "NERNRSOA24003", "NERNRSOA24006", "NERNRSOA24002", "NERNRSOA24001", "NERNRSOA24005", "NERNRSOA24007","NEPBRSCA25011", "NEPBRSCA25007", "NEPBRSCA25003", "NEPBRSCA25002", "NEPBRSCA25015", "NEPBRSCA25001", "NEPBRSCA25009", "NEPBRSCA25005", "NEPBRSCA25010", "NEPBRSCA25006", "NEPBRSCA25016", "NEPBRSCA25014", "NEPBRSCA25004", "NEPBRSCA25008", "NEPBRSCA25013", "NEPBRSCA25012", "NEPBRSOA25007", "NEPBRSOA25003", "NEPBRSOA25002", "NEPBRSOA25015", "NEPBRSOA25001", "NEPBRSOA25009", "NEPBRSOA25005", "NEPBRSOA25010", "NEPBRSOA25006", "NEPBRSOA25016", "NEPBRSOA25014", "NEPBRSOA25008", "NEPBRSOA25012","NEBARSCA29023", "NEBARSCA29017", "NEBARSCA29001", "NEBARSCA29019", "NEBARSCA29025", "NEBARSCA29015", "NEBARSCA29026", "NEBARSCA29012", "NEBARSCA29022", "NEBARSCA29006", "NEBARSCA29010", "NEBARSCA29028", "NEBARSCA29011", "NEBARSCA29003", "NEBARSCA29009", "NEBARSCA29002", "NEBARSCA29008", "NEBARSCA29018", "NEBARSCA29021", "NEBARSCA29005", "NEBARSCA29007", "NEBARSCA29014", "NEBARSCA29027", "NEBARSCA29004", "NEBARSCA29016", "NEBARSCA29024", "NEBARSCA29020", "NEBARSCA29013","NEBARSOA29023",  "NEBARSOA29001", "NEBARSOA29019", "NEBARSOA29025", "NEBARSOA29015", "NEBARSOA29026", "NEBARSOA29012", "NEBARSOA29022", "NEBARSOA29006", "NEBARSOA29010", "NEBARSOA29028", "NEBARSOA29011", "NEBARSOA29003", "NEBARSOA29009", "NEBARSOA29002",  "NEBARSOA29018", "NEBARSOA29005", "NEBARSOA29014", "NEBARSOA29027", "NEBARSOA29004", "NEBARSOA29016", "NEBARSOA29024", "NEBARSOA29020", "NEBARSOA29013","NESERSCA28007", "NESERSCA28001", "NESERSCA28002", "NESERSCA28003", "NESERSCA28005", "NESERSCA28006", "NESERSCA28004","NESERSOA28007", "NESERSOA28001", "NESERSOA28002", "NESERSOA28003", "NESERSOA28005", "NESERSOA28006", "NESERSOA28004","NEALRSCA27010", "NEALRSCA27005", "NEALRSCA27007", "NEALRSCA27004", "NEALRSCA27001", "NEALRSCA27008", "NEALRSCA27003", "NEALRSCA27009", "NEALRSCA27006", "NEALRSCA27002","NEALRSOA27010", "NEALRSOA27005", "NEALRSOA27007", "NEALRSOA27004", "NEALRSOA27001", "NEALRSOA27008", "NEALRSOA27003", "NEALRSOA27009", "NEALRSOA27006", "NEALRSOA27002","NEMARSCA21001", "NEMARSCA21005", "NEMARSCA21006", "NEMARSCA21016", "NEMARSCA21002", "NEMARSCA21007", "NEMARSCA21014", "NEMARSCA21003", "NEMARSCA21019", "NEMARSCA21008", "NEMARSCA21009", "NEMARSCA21011", "NEMARSCA21004", "NEMARSCA21013", "NEMARSCA21018", "NEMARSCA21015", "NEMARSCA21010", "NEMARSCA21012", "NEMARSCA21017","NEMARSOA21001", "NEMARSOA21005", "NEMARSOA21006", "NEMARSOA21016", "NEMARSOA21002", "NEMARSOA21007", "NEMARSOA21014", "NEMARSOA21003", "NEMARSOA21019", "NEMARSOA21008", "NEMARSOA21009", "NEMARSOA21011", "NEMARSOA21004", "NEMARSOA21013", "NEMARSOA21018", "NEMARSOA21015", "NEMARSOA21010", "NEMARSOA21012", "NEMARSOA21017","NEPERSCA26010", "NEPERSCA26001", "NEPERSCA26009", "NEPERSCA26003", "NEPERSCA26008", "NEPERSCA26004", "NEPERSCA26005", "NEPERSCA26007", "NEPERSCA26002", "NEPERSCA26011", "NEPERSCA26012", "NEPERSCA26006","NEPERSOA26010", "NEPERSOA26001", "NEPERSOA26009", "NEPERSOA26003", "NEPERSOA26008", "NEPERSOA26004", "NEPERSOA26005", "NEPERSOA26007", "NEPERSOA26002", "NEPERSOA26011", "NEPERSOA26012", "NEPERSOA26006","NECERSCA23019", "NECERSCA23003", "NECERSCA23012", "NECERSCA23018", "NECERSCA23014", "NECERSCA23011", "NECERSCA23020", "NECERSCA23010", "NECERSCA23006", "NECERSCA23002", "NECERSCA23001", "NECERSCA23007", "NECERSCA23004", "NECERSCA23015", "NECERSCA23017", "NECERSCA23008", "NECERSCA23021", "NECERSCA23016", "NECERSCA23022", "NECERSCA23005", "NECERSCA23013", "NECERSCA23009","NECERSOA23019", "NECERSOA23003", "NECERSOA23012", "NECERSOA23018", "NECERSOA23014", "NECERSOA23011", "NECERSOA23020", "NECERSOA23010", "NECERSOA23006", "NECERSOA23002", "NECERSOA23001", "NECERSOA23007", "NECERSOA23004", "NECERSOA23015", "NECERSOA23017", "NECERSOA23008", "NECERSOA23021", "NECERSOA23016", "NECERSOA23022", "NECERSOA23005", "NECERSOA23013", "NECERSOA23009","NEPIRSCA22004", "NEPIRSCA22009", "NEPIRSCA22002", "NEPIRSCA22006", "NEPIRSCA22010", "NEPIRSCA22007", "NEPIRSCA22003", "NEPIRSCA22008", "NEPIRSCA22011", "NEPIRSCA22001", "NEPIRSCA22005","NEPIRSOA22004", "NEPIRSOA22009", "NEPIRSOA22002", "NEPIRSOA22006", "NEPIRSOA22010", "NEPIRSOA22007", "NEPIRSOA22003",  "NEPIRSOA22011", "NEPIRSOA22001", "NEPIRSOA22005"]
+selecaoRegiaoHTML = '<select onchange="location = this.value;"><option>Selecione uma das Opções a Seguir</option>'
+
+for regiao in RegioesSaude:
+        selecaoRegiaoHTML = selecaoRegiaoHTML+'<option value="'+ regiao + '.html'+'">Regiao de Saúde: '+ regiao +'</option>'
+
+selecaoRegiaoHTML = selecaoRegiaoHTML+'</select>'
 
 Estado = 'Estado '
 
@@ -60,7 +69,7 @@ municipiosFileList = [["BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti"
 municipiosList = [municipioListBA,municipioListSE,municipioListAL,municipioListPE,municipioListPB,municipioListRN,municipioListCE,['Teresina'],municipioListMA]
 #municipiosList = municipiosList[0]
 
-selecaoMunicipiosHTML = '<select id="16131" onchange="location = this.value;"><option>Selecione uma das Opções a Seguir</option>'
+selecaoMunicipiosHTML = '<select onchange="location = this.value;"><option>Selecione uma das Opções a Seguir</option>'
 
 for estado in zip(municipiosList,municipiosFileList):
     for municipio in zip(estado[0],estado[1]):
@@ -161,6 +170,7 @@ def readCSV(filename_src,column=data2Num('Saida_Estimada')):
                 importantDates.append(row[0])
             counter = counter + 1
     return [x,y,importantDates,axisName]
+    
 
 def plotConfiguration(x1,x,y,title,ylabel):
     plot = figure(plot_height=320, x_axis_type='datetime', title=title)
@@ -219,29 +229,29 @@ def plotAlberto(plot,data,local):
     plot.xaxis.ticker = FixedTicker(ticks=temp)
     return plot
 
-def plotMarcus(plot,data,local):
+def plotMarcus(plot,data,local,delay=0):
     data = data.get(unidecode(local), "empty")
     if data == 'empty':
         return
-    time = list()
+    timeList = list()
     y = list()
-    value = 0
-    counter = 0
     importantDates = list()
     timeTemp = ''
-    for row in data:
-        timeTemp = row[0]
-        time.append(timeTemp)
-        if row[2] == '':
+    acumulated = 0
+    for row in zip(data,range(len(data)-1)):
+        format = '%Y-%m-%d'
+        timeTemp = datetime.datetime.strptime(row[0][0],format)+ timedelta(days=delay)
+        timeTemp = timeTemp.strftime(format)
+        timeTemp = timeList.append(timeTemp)
+        if row[0][1] == '':
             value = 0
         else:
-            value = float(row[2])
-        y.append(value)
-        if counter%7 == 0:
-            counter = 0
-            importantDates.append(row[0])
-        counter = counter + 1
-    x = pd.to_datetime(time)
+            acumulated = acumulated+float(row[0][1])
+        y.append(acumulated)
+        if row[1]%7 == 0:
+            importantDates.append(row[0][0])
+                
+    x = pd.to_datetime(timeList)
     plot.line(x,y, line_width=2.5, line_alpha=0.6,legend_label='Projeções Modelo 3',line_color=Spectral6[2],line_dash="4 4")
     tick_vals = pd.to_datetime(importantDates).astype(int) / 10**6
     #plot.xaxis.ticker = FixedTicker(ticks=list(tick_vals))
@@ -454,7 +464,7 @@ def comparacoCenarios(filename_src,title,yLabel,removelastData = 0):
     
     #D = readCSV(filename_src+'PNP.csv')
 
-    x = pd.to_datetime(A[0])
+    x = pd.to_datetime(B[0])
     plot = figure(plot_height=320, x_axis_type='datetime', title=title)
     plot.line(x=x,y=A[1][0:len(A[1])-removelastData], line_width=2, line_alpha=0.6,legend_label='Mantida no Último Valor',line_color=Spectral6[0])
     plot.circle(x, A[1][0:len(A[1])-removelastData], fill_color = Spectral6[0], size=2)
@@ -478,7 +488,7 @@ def comparacoCenarios(filename_src,title,yLabel,removelastData = 0):
     hovertool = HoverTool(tooltips=[("x", "$x{%F}"),("y", "@y"),],formatters={'$x': 'datetime',})
     plot.add_tools(hovertool)
 
-    tick_vals = pd.to_datetime(A[2]).astype(int) / 10**6
+    tick_vals = pd.to_datetime(B[2]).astype(int) / 10**6
     #plot.xaxis.ticker = FixedTicker(ticks=list(tick_vals))
     temp = list(tick_vals)
     plot.xaxis.ticker = FixedTicker(ticks=temp)
@@ -519,11 +529,11 @@ def geracaoPorEstado(region,stateListFile,stateList,data,Titulos,yLabel):
 
     select = Div(text=selecaoHTML)
     selectmunicipio = Div(text=selecaoMunicipiosHTML)
-    l=grid([[select, selectmunicipio],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
+    selectRegiao = Div(text=selecaoRegiaoHTML)
+    l=grid([[select, selectmunicipio,selectRegiao],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
     show(l)
 
-
-
+'''
 acumulatedData = dict()
 conjuntodePlots = list()
 for i in zip(stateListFile,stateList): 
@@ -559,8 +569,9 @@ for i in zip(stateListFile,stateList):
     paragraph9 = Paragraph(text="Taxa de Crescimento = " + "{:.{}f}".format(toPainel['TaxadeCrescimento'][0],4))
     paragraph10 = Paragraph(text="Fator de Crescimetno = " + "{:.{}f}".format(toPainel['FatordeCrescimento'][0],4))
     paragraphOBS = Paragraph(text= predictionObservations)
+    selectRegiao = Div(text=selecaoRegiaoHTML)
     l=grid([
-    [select,selectmunicipio],
+    [select,selectmunicipio,selectRegiao],
     [paragraph1,paragraph2,paragraph3,paragraph4,paragraph5],
     [paragraph6,paragraph7,paragraph8,paragraph9,paragraph10],
     [casosAcumuladosComp, obitosAcumuladosComp],
@@ -571,7 +582,6 @@ for i in zip(stateListFile,stateList):
     [percentPopulContaminada,mortalidade],
     [taxadeCrescimento,fatordeCrescimento]
     ])
-    break
     show(l) 
 
 Titulos = [ #OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP,CAP50,OAP50,CAP75,OAP75]
@@ -618,8 +628,8 @@ yLabel = [
     "Casos Acumulados"
 ]
 
-#for i in zip(regioes,listOfRegionsFiles,listOfRegions):
-#    geracaoPorEstado(i[0],i[1],i[2],acumulatedData,Titulos,yLabel)
+for i in zip(regioes,listOfRegionsFiles,listOfRegions):
+    geracaoPorEstado(i[0],i[1],i[2],acumulatedData,Titulos,yLabel)
 
 
 #municipios
@@ -627,8 +637,7 @@ acumulatedData = dict()
 conjuntodePlots = list()
 OA_Alberto = getAlbertoData("D:/Projetos/ModeloAlberto/Dados/OA_AL.csv")
 CA_Alberto = getAlbertoData("D:/Projetos/ModeloAlberto/Dados/CA_AL.csv")
-OA_Marcus = getAlbertoData('D:/Projetos/covid-br-model-epiforecasts/_nowcasts/covid-regional/brazil/cities-summary/cases.csv')
-
+#CN_Marcus = getAlbertoData('D:/Projetos/covid-br-model-epiforecasts/_nowcasts/covid-regional/brazil/cities-summary/cases.csv')
 
 for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)): 
     for i in zip(j[0],j[1]):
@@ -639,10 +648,11 @@ for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)):
 
         casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'CA'+i[0],"Casos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
         plotAlberto(casosAcumuladosComp,CA_Alberto,i[1])
+        #plotMarcus(casosAcumuladosComp,CN_Marcus,stateListNordesteAbrev[j[2]]+'-'+i[1],9)
 
         obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Municipio: " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
         plotAlberto(obitosAcumuladosComp,OA_Alberto,i[1])
-        plotMarcus(obitosAcumuladosComp,OA_Marcus,stateListNordesteAbrev[j[2]]+'-'+i[1])
+        
         #casosNovos              = CasosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Casos Novos no Municipio:  ' + i[1], 'Casos Novos')
         #obtosNovos              = ObtosNovos('D:/Projetos/ModeloAndre/data/',i[0], 'Evolução de Óbitos Novos no Municipio:  ' + i[1], 'Óbitos Novos')
         #casosAcumulados         = CasosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Casos Acumulados no Municipio:  ' + i[1], 'Casos Acumulados')
@@ -651,10 +661,12 @@ for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)):
         #paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
         #paragraph2 = Paragraph(text="Casos Novos = " +"{:.{}f}".format(toPainel['CasosNovos'][0],4))
         #paragraph6 = Paragraph(text="Óbitos Acumulados = " + "{:.{}f}".format(toPainel['ObitosAcumulados'][0],4))
-    # paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
+        # paragraph7 = Paragraph(text="Óbitos Novos = " + "{:.{}f}".format(toPainel['ObitosNovos'][0],4))
         paragraphOBS = Paragraph(text= predictionObservations)
+        selectRegiao = Div(text=selecaoRegiaoHTML)
+
         l=grid([
-        [select,selectmunicipio],
+        [select,selectmunicipio,selectRegiao],
         #[paragraph1,paragraph2,paragraph6,paragraph7],
         [casosAcumuladosComp, obitosAcumuladosComp],
         [paragraphOBS],
@@ -662,3 +674,31 @@ for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)):
         ])
         #break
         show(l)
+
+'''
+
+#Regioes de Saude
+# datas estão começando erradas das predições
+acumulatedData = dict()
+conjuntodePlots = list()
+
+for j in RegioesSaude: 
+    output_file('./dashboard/'+ j + '.html')
+    
+    select = Div(text=selecaoHTML)
+    selectmunicipio = Div(text=selecaoMunicipiosHTML)
+    selectRegiao = Div(text=selecaoRegiaoHTML)
+
+    casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Casos: " + j,"Casos")
+    if j[6] == 'C':
+        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Casos Acumulados: " + j,"Casos Acumulados")
+    else:
+        casosAcumuladosComp     = comparacoCenarios('D:/Projetos/ModeloAndre/dataAn/'+ j,"Óbitos Acumulados: " + j,"Óbitos Acumulados")
+    paragraphOBS = Paragraph(text= predictionObservations)
+    l=grid([
+    [select,selectmunicipio,selectRegiao],
+    [casosAcumuladosComp],
+    [paragraphOBS]
+    ])
+    #break
+    show(l)

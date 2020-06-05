@@ -14,7 +14,7 @@ def ReadAllCsvFromFolder(src,dest):
         lista    = []
         if os.path.isfile(src  + file_name):
             splitedFinename = file_name.split('.')
-            if "CA" in file_name or "OA" in file_name:
+            if "CA" in file_name or "OA" in file_name and os.path.isfile(dest + splitedFinename[0] +'P.'+ splitedFinename[1]):
                 with open(src + file_name, "r", encoding="utf8", newline="") as f:
                     with open(dest + splitedFinename[0] +'P.'+ splitedFinename[1], "r", encoding="utf8", newline="") as f2:
                         reader_dest= csv.reader(f2, delimiter=",")

@@ -2,6 +2,7 @@ import csv, os
 import shutil
 import xlrd
 from unidecode import unidecode
+import pandas as pd
 
 #xlxsDir = 'C:/Users/andre/Downloads/'
 xlxsDir = '/home/travis/Downloads/'
@@ -9,11 +10,11 @@ filename_src = './dataRaw/'
 filename_dest = './data/'
 
 def csv_from_excel(xlsxFile):
-    wb = xlrd.open_workbook(xlsxFile)
+    #wb = xlrd.open_workbook(xlsxFile)
     splitedFinenameFromExtension = xlsxFile.split('.')
     splitedFinename = splitedFinenameFromExtension[0].split('/')
     splitedFinename = splitedFinename[-1]
-
+    '''
     sh = wb.sheet_by_name('Sheet 1')
     splitedFinename = xlsxFile.split('.')
     your_csv_file = open(splitedFinenameFromExtension[0] + '.csv', 'w', encoding="utf8", newline="")
@@ -21,7 +22,9 @@ def csv_from_excel(xlsxFile):
     for rownum in range(sh.nrows):
         wr.writerow(sh.row_values(rownum))
 
-    your_csv_file.close()
+    your_csv_file.close()'''
+    df = pd.read_excel(xlsxFile)
+    df.to_csv(splitedFinenameFromExtension[0] + '.csv')
     return splitedFinenameFromExtension[0] + '.csv'
 
 def copiarPastas(src,dest):
@@ -79,10 +82,11 @@ def splitData(filename_src,data):
     Dict_data = dict()
     filename_src = filename_src.split('.')
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
-        reader = csv.reader(f,delimiter=";")
+        reader = csv.reader(f,delimiter=",")
 
         lastRow = ''
         for row in reader: 
+            row = row[1:]
             if lastRow == 'Centro-Oeste' and row[0] == 'Norte':
                 break
             lastRow = row[0] 
@@ -91,53 +95,64 @@ def splitData(filename_src,data):
 
 def sumStateData(dataState):
     Dict_day = dict()
-    for row in dataState:
-        if Dict_day.get(row[0], []) == []:
-            newstr = row[1].replace("'", "")
-            if newstr == '':
-                newstr = '0'
-            Dict_day[row[0]] = float(newstr)
-        else:
-            newstr = row[1].replace("'", "")
-            if newstr == '':
-                newstr = '0'
-            Dict_day[row[0]] = Dict_day[row[0]] + float(newstr)
+    for date in dataState:
+        for row in dataState[date]:
+            if not Dict_day.get(date):
+                newstr = row[3]
+                if newstr == '':
+                    newstr = '0'
+                Dict_day[date] = float(newstr)
+            else:
+                newstr = row[3]
+                if newstr == '':
+                    newstr = '0'
+                Dict_day[date] = Dict_day[date] + float(newstr)
     return Dict_day
 
-def splitDataPorRegiaoDeSaude(filename_src,data):
-    Dict_data = dict()
+def splitDataPorRegiaoDeSaude(filename_src,data,region,state):
+    Dict_Regiao = dict()
     filename_src = filename_src.split('.')
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
-        reader = csv.reader(f,delimiter=";")
+        reader = csv.reader(f,delimiter=",")
         for row in reader:
-            Dict_data.setdefault(row[5],[]).append ([ row[7],row[CasosToNum(data)] ]) 
-    return Dict_data
+            row = row[1:]
+            if row[0] == region and row[1] == state:
+                if Dict_Regiao.get(row[5]):
+                    Dict_Regiao[row[5]].setdefault(row[7],[]).append([row[0],row[1],row[2],row[CasosToNum(data)] ])
+                else:
+                    date = dict()
+                    date.setdefault(row[7],[]).append([row[0],row[1],row[2],row[CasosToNum(data)]])
+                    Dict_Regiao.setdefault(row[5],dict()).update(date)
+    return Dict_Regiao
 
-def writeDataCsVPorRegiaoDeSaude(filename_dest,data,tipo):
+def writeDataCsVPorRegiaoDeSaude(filename_dest,data,tipo,region,state):
     flag = False
+    nameRegSaude = list()
     for regioesDeSaude in data:
         
         if not flag or regioesDeSaude == '':
             flag = True
             continue
 
-        tipoN = tipo + regioesDeSaude
+        tipoN = region + state + tipo + regioesDeSaude
         stateDataRaw = data[regioesDeSaude]
         stateData = sumStateData(stateDataRaw)
-
+        tipoN = tipoN.split('.')[0]
         with open(filename_dest+tipoN+'.csv', "w", encoding="utf8", newline="") as edge_file:
             writer = csv.writer(edge_file, delimiter=",")
-
+            nameRegSaude.append(tipoN)
             writer.writerow(['Data', tipoN])
             for i in sorted(stateData):
                     writer.writerow([i, stateData[i]])
+    print(nameRegSaude)
 
 def splitDataPorMunicipio(filename_src,data,state,municipio):
     Dict_data = dict()
     filename_src = filename_src.split('.')
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
-        reader = csv.reader(f,delimiter=";")
+        reader = csv.reader(f,delimiter=",")
         for row in reader:
+            row = row[1:]
             if(row[1] == state and municipio == row[2]):
                 Dict_data.setdefault(row[2],[]).append ([ row[7],row[CasosToNum(data)] ]) 
     return Dict_data
@@ -198,10 +213,11 @@ def splitDataBrasil(filename_src,data):
     Dict_data = dict()
     filename_src = filename_src.split('.')
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
-        reader = csv.reader(f,delimiter=";")
+        reader = csv.reader(f,delimiter=",")
 
         lastRow = ''
         for row in reader: 
+            row = row[1:]
             if lastRow == 'Brasil' and row[0] == 'Norte':
                 break
             lastRow = row[0] 
@@ -218,12 +234,20 @@ def runBrasil(state,legend):
     Dict_data_casosAcumulados = splitDataBrasil(filename_src,'emAcompanhamentoNovos')
     writeDataCsV(filename_dest, Dict_data_casosAcumulados, 'EAN',state,legend)
 
+def runRegioesSaude(region,regionAbrev,state):
+    Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados',region,state)
+    writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA',regionAbrev,state)
+
+    Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'obitosAcumulado',region,state)
+    writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA',regionAbrev,state)
+
 
 filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
-#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_29mai2020.csv'
+#filename_src = './dataRaw/HIST_PAINEL_COVIDBR_04jun2020.csv'
 # Norte
+
 runBrasil('Brasil','BiR_An')
 
 runAll('RO','RiO_An')
@@ -299,8 +323,7 @@ for i in municipioListPI:
     
 for i in municipioListMA:
     runMunicipios(i, 'MA')
-#Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'CasosAcumulados')
-#writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSCA')
 
-#Dict_data_casosAcumulados = splitDataPorRegiaoDeSaude(filename_src,'obitosAcumulado')
-#writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA')
+NElist = ['RN','PB','BA','SE','AL','MA','PE','CE','PI']
+for i in NElist:
+    runRegioesSaude('Nordeste','NE',i)

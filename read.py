@@ -1,5 +1,11 @@
 import csv
+from datetime import datetime
+from datetime import timedelta 
+import time 
 
+a = datetime.today()
+print(a)
+'''
 stateListFileNordeste = ["AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An"]
 
 def data2Num(shortMonth):
@@ -63,4 +69,4 @@ for file in stateListFileNordeste:
     OA = readCSV(filename_src+'OA'+file+'.csv')
     CA = readCSV(filename_src+'CA'+file+'.csv')
     CN = readCSV(filename_src+'CN'+ file +'.csv')
-    ON = readCSV(filename_src+'ON'+file+'.csv') 
+    ON = readCSV(filename_src+'ON'+file+'.csv') '''
