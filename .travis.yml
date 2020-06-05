@@ -25,6 +25,7 @@ install:
   - python -m pip install selenium	
   - python -m pip install xlrd
   - python -m pip install unidecode
+  - python -m pip install pandas
 
 script:
   - python downloadfromMS.py
