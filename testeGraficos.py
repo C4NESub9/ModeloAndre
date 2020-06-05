@@ -287,7 +287,7 @@ def getAllData(filename_src,file,population,filename_srcPredictions):
 
 def Letalidade(filename_src,file,title,yLabel):
     
-    OA = readCSV(filename_src+'OA'+file+'.csv')
+    OA = readCSV(filename_src+'OA'+file+'.csv') 
     CA = readCSV(filename_src+'CA'+file+'.csv')
 
     toPainel.clear()
