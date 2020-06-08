@@ -309,7 +309,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
 
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    std::cout << arx->print() << std::endl << LinAlg::characteristicPolynom(arx->getModelCoef());
+    std::cout << arx->print() << std::endl << LinAlg::characteristicPolynom(LinAlg::Matrix<double>(1)|arx->getModelCoef());
     return data;
 }
 
