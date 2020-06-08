@@ -461,7 +461,7 @@ int main()
         LinAlg::Matrix<double> data4 = predicao(Input[1], Output[1], 15);
         salvarDados(RegioesSaude[j] + "PN", Output[0].c_str(), data4);
 
-        LinAlg::Matrix<double> data5 = calculaModeloARXMQE(Input[1], Output[1], -60, 0);
+//        LinAlg::Matrix<double> data5 = calculaModeloARXMQE(Input[1], Output[1], -60, 0);
         LinAlg::Matrix<double> data5 = calculaModeloARMQE(Output[1],0.6);
         salvarDados(RegioesSaude[j] + "60", Output[0].c_str(), data5);
     }
