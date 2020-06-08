@@ -210,7 +210,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix,double Isolamento){
         temp_ant = temp;
         predictOutput(0,i) = (int)temp;
     }
-    data = /*((~(Output(0,from(0)-->counter-2)))|*/(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    data = /*((~(Output(0,from(0)-->counter-2)))|*/((~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     //std::cout << arx->print() << std::endl;
     return data;
