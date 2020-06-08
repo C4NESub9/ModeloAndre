@@ -200,7 +200,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix,double Isolamento){
     arx->setInitialOutputValue(Output(0,0));
     LinAlg::Matrix<double> estOutput = Output(0,0)*LinAlg::Ones<double>(1,counter);
     for(unsigned i = 2; i < counter; ++i)
-        estOutput(0,i) = int(arx->sim(Input(0,i-1),Output(0,i-2)));
+        estOutput(0,i) = int(arx->sim(0,Output(0,i-2)));
 
     double temp = estOutput(0,counter-1);
     double temp_ant = temp;
@@ -411,8 +411,8 @@ int main()
             std::cout << tipoDados[i].toStdString().c_str() << estados[j].toStdString().c_str() << std::endl;
         }
 
-    QStringList municipios = {"BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii"/*,"MiACixiai"*/}; //"PiIPicisi","PiISioiRiiiuidioiaioi",/*"PiBSiuiai",*/
-    for(uint8_t i = 0; i < 4; ++i)
+    QStringList municipios = {"BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii","MiACixiai"}; //"PiIPicisi","PiISioiRiiiuidioiaioi",/*"PiBSiuiai",*/
+    for(uint8_t i = 0; i < 2; ++i)
         for(uint8_t j = 0; j < municipios.count(); ++j){
             std::string *Input = pegarDados(isolamentoEstados + municipios[j][0]+ municipios[j][1]+ municipios[j][2] + "_An");
             std::string *Output = pegarDados(tipoDados[i] + municipios[j].toStdString().c_str());
