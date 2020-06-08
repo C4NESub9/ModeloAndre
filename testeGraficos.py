@@ -575,10 +575,10 @@ for i in zip(stateListFile,stateList):
     [paragraph1,paragraph2,paragraph3,paragraph4,paragraph5],
     [paragraph6,paragraph7,paragraph8,paragraph9,paragraph10],
     [casosAcumuladosComp, obitosAcumuladosComp],
-    [mobilidade,mobilidade],
     [paragraphOBS],
     [casosAcumulados, obtosAcumulados],
     [casosNovos, obtosNovos],
+    [mobilidade],
     [letalidade, incidencia],
     [percentPopulContaminada,mortalidade],
     [taxadeCrescimento,fatordeCrescimento]
