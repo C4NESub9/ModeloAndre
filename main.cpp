@@ -191,7 +191,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento,
     LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
-    Output = Output(0,from(50)-->Output.getNumberOfColumns())
+    Output = Output(0,from(50)-->Output.getNumberOfColumns());
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
 
