@@ -187,7 +187,7 @@ LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     return data;
 }
 
-LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento, double fator=0.07){
+LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento, double fator=0.2){
     LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
