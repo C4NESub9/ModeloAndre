@@ -378,7 +378,7 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
 int main()
 {                                      /* Nordeste*/                                                                         /* Norte*/                                                     /* Suldeste*/                        /* Sul*/                   /* Centro-oeste*/
     QStringList estados = {"BiR_An", "AiL_An","BiA_An","CiE_An","MiA_An","PiB_An","PiE_An","PiI_An","RiN_An","SiE_An","RiO_An","AiC_An","AiM_An","RiR_An","PiA_An","AiP_An","TiO_An","MiG_An","EiS_An","RiJ_An","SiP_An","PiR_An","SiC_An","RiS_An","MiS_An","MiT_An","GiO_An","DiF_An"};
-    QString tipoDados[2] = {"CA","OA","CN","ON"};
+    QString tipoDados[2] = {"CA","OA"/*,"CN","ON"*/};
     QString isolamentoEstados = "GDM";
 
     for(uint8_t i = 0; i < 2; ++i)
