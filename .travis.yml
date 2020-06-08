@@ -28,7 +28,7 @@ install:
   - python -m pip install pandas
 
 script:
-  - python downloadfromMS.py
+  - python downloadfromMS2.py
   - python dataConverter.py 
   - python downloadMobilityReport.py 
   - qmake -project
