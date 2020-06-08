@@ -187,7 +187,7 @@ LinAlg::Matrix<double> calculaModeloARMQ(std::string matrix){
     return data;
 }
 
-LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento, double fator=0.1){
+LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento, double fator=2){
     LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
@@ -206,7 +206,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento,
     double temp_ant = temp;
     LinAlg::Matrix<double> predictOutput(1,15);
     for(unsigned i = 0; i < 15; ++i){
-        temp = arx->sim(0,temp - (temp - temp_ant)*Isolamento*fator);
+        temp = arx->sim(0,temp - /*(temp - temp_ant)**/Isolamento*fator);
         predictOutput(0,i) = (int)temp;
         temp_ant = predictOutput(0,i-1);
     }
