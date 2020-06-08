@@ -21,7 +21,7 @@ LinAlg::Matrix<double> findBestARModelMQ(LinAlg::Matrix<double> Input, LinAlg::M
     double AIC4 = (Output*(~Output))(0,0);
     double BIC = AIC4, C = AIC4;
 
-    for(uint8_t k = 1; k < 3; ++k){
+    for(uint8_t k = 2; k < 2; ++k){
         arx = new ModelHandler::ARX<double>(0,k);
         LS = new OptimizationHandler::LeastSquare<double>(arx);
         LS->Optimize(Input,Output);
