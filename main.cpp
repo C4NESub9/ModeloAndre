@@ -52,7 +52,7 @@ LinAlg::Matrix<double> findBestARModelMQE(LinAlg::Matrix<double> Output)
 {
     ModelHandler::ARX<double> *arx;
     OptimizationHandler::ExtendedLeastSquare<double> *ELS;
-    LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(Output.getNumberOfRows(),Output.getNumberOfRows())
+    LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(Output.getNumberOfRows(),Output.getNumberOfRows());
     uint16_t counter = Output.getNumberOfColumns();
     LinAlg::Matrix<double> error, ModelCoef;
     double AIC4 = (Output*(~Output))(0,0);
