@@ -132,7 +132,7 @@ LinAlg::Matrix<double> findBestARXModelMQE(LinAlg::Matrix<double> Input, LinAlg:
     double AIC4 = (Output*(~Output))(0,0);
     double BIC = AIC4, C = AIC4;
 
-    for(uint8_t k = 1; k < 3; ++k){
+    for(uint8_t k = 2; k < 2; ++k){
         arx = new ModelHandler::ARX<double>(k,k);
         ELS = new OptimizationHandler::ExtendedLeastSquare<double>(arx);
         ELS->Optimize(Input,Output);
