@@ -191,8 +191,8 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento,
     LinAlg::Matrix<double> data;
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrix;
-    LinAlg::Matrix<double> complementar = Output(0,from(0)-->(Output.getNumberOfColumns()/3-1));
-    Output = Output(0,from(Output.getNumberOfColumns()/3)-->Output.getNumberOfColumns());
+    LinAlg::Matrix<double> complementar = Output(0,from(0)-->(Output.getNumberOfColumns()/6-1));
+    Output = Output(0,from(Output.getNumberOfColumns()/6)-->Output.getNumberOfColumns());
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
 
@@ -211,7 +211,9 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix, double Isolamento,
         temp = arx->sim(0,temp - OutputFactor*Isolamento*fator);
         predictOutput(0,i) = (int)temp;
     }
-    data = /*((~(Output(0,from(0)-->counter-2)))|*/((~(complementar|estOutput(0,from(1)-->counter-1)|predictOutput))|(~(complementar|Output(0,from(0)-->counter-2)-(complementar|estOutput(0,from(1)-->counter-1)))));
+    //LinAlg::Matrix<double> tempMatrix = (complementar|estOutput(0,from(1)-->counter-1));
+    //tempMatrix = (complementar|Output(0,from(0)-->counter-2));
+    data = /*((~(Output(0,from(0)-->counter-2)))|*/((~(complementar|estOutput(0,from(1)-->counter-1)|predictOutput))|(~((complementar|Output(0,from(0)-->counter-2))-(complementar|estOutput(0,from(1)-->counter-1)))));
     //std::cout << data << std::endl;
     //std::cout << arx->print() << std::endl;
     return data;
@@ -289,8 +291,8 @@ LinAlg::Matrix<double> calculaModeloARXMQE(std::string matrixIn, std::string mat
 LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, double endMinusDays){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
-    LinAlg::Matrix<double> complementar = Output(0,from(0)-->(Output.getNumberOfColumns()/3-1));
-    Output = Output(0,from(Output.getNumberOfColumns()/3)-->Output.getNumberOfColumns());
+    LinAlg::Matrix<double> complementar = Output(0,from(0)-->(Output.getNumberOfColumns()/6-1));
+    Output = Output(0,from(Output.getNumberOfColumns()/6)-->Output.getNumberOfColumns());
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
     Input = Input(0,from(0)-->counter-2);
@@ -311,7 +313,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
         estOutput(0,i) = arx->sim(0,estOutput(0,i-1));
     }
 
-    LinAlg::Matrix<double> data = (~(complementar|estOutput(0,from(1)-->counter-1)))|((~(complementar|Output(0,from(0)-->counter-2)))|(~(complementar|Output(0,from(0)-->counter-2)-(complementar|estOutput(0,from(1)-->counter-1)))));
+    LinAlg::Matrix<double> data = (~(complementar|estOutput(0,from(1)-->counter-1)))|((~(complementar|Output(0,from(0)-->counter-2)))|(~((complementar|Output(0,from(0)-->counter-2))-(complementar|estOutput(0,from(1)-->counter-1)))));
     //std::cout << data << std::endl;
 
     double delta = pow(ModelCoef(0,0),2)-4*ModelCoef(1,0),r0,i0 = 0,r1,i1 = 0;
@@ -330,7 +332,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
 
 std::string* pegarDados(QString nome)
 {
-    //QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
+//    QString filename = "D:\\Projetos\\ModeloAndre\\data\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/data/";
     QFile file(filename+nome+".csv");
     file.open(QIODevice::ReadOnly);
@@ -365,7 +367,7 @@ void salvarDados(QString nome, QString diasParaGrafico, LinAlg::Matrix<double> d
     QDate Date = QDate::fromString(diasParaGrafico.split('\n')[1],"yyyy-MM-dd");
 
 
-    //QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
+//    QString filename = "D:\\Projetos\\ModeloAndre\\dataAn\\";
     QString filename = "/home/travis/build/C4NESub9/ModeloAndre/dataAn/";
     QFile file(filename+nome+"P.csv");
     file.open(QIODevice::WriteOnly | QIODevice::Truncate );
