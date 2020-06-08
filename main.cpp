@@ -48,11 +48,11 @@ LinAlg::Matrix<double> findBestARModelMQ(LinAlg::Matrix<double> Input, LinAlg::M
     return ModelCoef;
 }
 
-LinAlg::Matrix<double> findBestARModelMQE(LinAlg::Matrix<double> Input, LinAlg::Matrix<double> Output)
+LinAlg::Matrix<double> findBestARModelMQE(LinAlg::Matrix<double> Output)
 {
     ModelHandler::ARX<double> *arx;
     OptimizationHandler::ExtendedLeastSquare<double> *ELS;
-
+    LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(Output.getNumberOfRows(),Output.getNumberOfRows())
     uint16_t counter = Output.getNumberOfColumns();
     LinAlg::Matrix<double> error, ModelCoef;
     double AIC4 = (Output*(~Output))(0,0);
@@ -194,7 +194,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix,double Isolamento){
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = LinAlg::Zeros<double>(1,counter-1);
 
-    LinAlg::Matrix<double> ModelCoef = findBestARModelMQE(Input, Output);
+    LinAlg::Matrix<double> ModelCoef = findBestARModelMQE(Output);
     arx = new ModelHandler::ARX<double>(0,ModelCoef.getNumberOfRows());
     arx->setModelCoef(ModelCoef);
     arx->setInitialOutputValue(Output(0,0));
@@ -210,7 +210,7 @@ LinAlg::Matrix<double> calculaModeloARMQE(std::string matrix,double Isolamento){
         temp_ant = temp;
         predictOutput(0,i) = (int)temp;
     }
-    data = ((~(Output(0,from(0)-->counter-2)))|(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    data = /*((~(Output(0,from(0)-->counter-2)))|*/(~(estOutput(0,from(1)-->counter-1)|predictOutput))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
     //std::cout << arx->print() << std::endl;
     return data;
