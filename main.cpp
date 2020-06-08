@@ -289,6 +289,8 @@ LinAlg::Matrix<double> calculaModeloARXMQE(std::string matrixIn, std::string mat
 LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, double endMinusDays){
     ModelHandler::ARX<double> *arx;
     LinAlg::Matrix<double> Output = matrixOut;
+    LinAlg::Matrix<double> complementar = Output(0,from(0)-->(Output.getNumberOfColumns()/4-1));
+    Output = Output(0,from(Output.getNumberOfColumns()/4)-->Output.getNumberOfColumns());
     uint16_t counter = Output.getNumberOfColumns()+1;
     LinAlg::Matrix<double> Input = matrixIn;
     Input = Input(0,from(0)-->counter-2);
@@ -309,7 +311,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
         estOutput(0,i) = arx->sim(0,estOutput(0,i-1));
     }
 
-    LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
+    LinAlg::Matrix<double> data = (~(complementar|estOutput(0,from(1)-->counter-1)))|((~(complementar|Output(0,from(0)-->counter-2)))|(~(complementar|Output(0,from(0)-->counter-2)-(complementar|estOutput(0,from(1)-->counter-1)))));
     //std::cout << data << std::endl;
 
     double delta = pow(ModelCoef(0,0),2)-4*ModelCoef(1,0),r0,i0 = 0,r1,i1 = 0;
