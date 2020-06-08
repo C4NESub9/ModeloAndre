@@ -411,7 +411,7 @@ int main()
             std::cout << tipoDados[i].toStdString().c_str() << estados[j].toStdString().c_str() << std::endl;
         }
 
-    QStringList municipios = {"BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii","MiACixiai"}; //"PiIPicisi","PiISioiRiiiuidioiaioi",/*"PiBSiuiai",*/
+    QStringList municipios = {"BiASiliaioi","BiAFiiiaidiaitini","BiAVitiriaidioiqiiiti","BiAIiaiuiai","BiAJiaieiri","SiEAiaiaiui","SiEIiaiaiaiai","SiEEitiniii","SiELigirioi","AiLMiciii","AiLAiaiiiaiai","AiLMirici","AiLCiriripi","AiLPilieirioiniiisi","PiERicifi","PiEPitioiiiai","PiECiriaiui","PiBJiaieisiai","PiBCimiiiaiGiaidi","PiBPitisi","RiNNitili","RiNMisioioi","CiEFiriaieiai","CiEJiaieirioiNiriei","CiESibiai","PiITirisini","MiASioiLiii","MiAIipiritiii"/*,"MiACixiai"*/}; //"PiIPicisi","PiISioiRiiiuidioiaioi",/*"PiBSiuiai",*/
     for(uint8_t i = 0; i < 4; ++i)
         for(uint8_t j = 0; j < municipios.count(); ++j){
             std::string *Input = pegarDados(isolamentoEstados + municipios[j][0]+ municipios[j][1]+ municipios[j][2] + "_An");
