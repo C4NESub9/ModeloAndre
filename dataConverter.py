@@ -3,6 +3,7 @@ import shutil
 import xlrd
 from unidecode import unidecode
 import pandas as pd
+from datetime import datetime, timedelta
 
 #xlxsDir = 'C:/Users/andre/Downloads/'
 xlxsDir = '/home/travis/Downloads/'
@@ -86,7 +87,7 @@ def splitData(filename_src,data):
 
         lastRow = ''
         for row in reader: 
-            row = row[1:]
+            #row = row[1:]
             if lastRow == 'Centro-Oeste' and row[0] == 'Norte':
                 break
             lastRow = row[0] 
@@ -115,7 +116,7 @@ def splitDataPorRegiaoDeSaude(filename_src,data,region,state):
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f,delimiter=",")
         for row in reader:
-            row = row[1:]
+            #row = row[1:]
             if row[0] == region and row[1] == state:
                 if Dict_Regiao.get(row[5]):
                     Dict_Regiao[row[5]].setdefault(row[7],[]).append([row[0],row[1],row[2],row[CasosToNum(data)] ])
@@ -152,7 +153,7 @@ def splitDataPorMunicipio(filename_src,data,state,municipio):
     with open('.' + filename_src[1] + '.csv', "r", encoding="utf8", newline="") as f:
         reader = csv.reader(f,delimiter=",")
         for row in reader:
-            row = row[1:]
+            #row = row[1:]
             if(row[1] == state and municipio == row[2]):
                 Dict_data.setdefault(row[2],[]).append ([ row[7],row[CasosToNum(data)] ]) 
     return Dict_data
@@ -217,7 +218,7 @@ def splitDataBrasil(filename_src,data):
 
         lastRow = ''
         for row in reader: 
-            row = row[1:]
+            #row = row[1:]
             if lastRow == 'Brasil' and row[0] == 'Norte':
                 break
             lastRow = row[0] 
@@ -242,9 +243,11 @@ def runRegioesSaude(region,regionAbrev,state):
     writeDataCsVPorRegiaoDeSaude(filename_dest, Dict_data_casosAcumulados, 'RSOA',regionAbrev,state)
 
 
-filename_src = copiarPastas(xlxsDir,filename_src)
+#filename_src = copiarPastas(xlxsDir,filename_src)
 #os.system('cd /home/travis/Downloads \n ls')
 #os.system('cd ' + './dataRaw/' + ' \n ls')
+today_date_str = "".join(str(datetime.now().date()).split("-"))
+filename_src = './dataRaw/'+"Brasil_COVID19-" + today_date_str + ".csv"
 #filename_src = './dataRaw/HIST_PAINEL_COVIDBR_04jun2020.csv'
 # Norte
 
