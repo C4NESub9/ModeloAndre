@@ -294,7 +294,8 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
 
     double N = counter - endMinusDays - 1;
 
-    LinAlg::Matrix<double> ModelCoef = findBestARXModelMQ(Input, Output);
+//    LinAlg::Matrix<double> ModelCoef = findBestARXModelMQ(Input, Output);
+    LinAlg::Matrix<double> ModelCoef = findBestARModelMQE(Output);
     //arx = new ModelHandler::ARX<double>(ModelCoef.getNumberOfRows()/2,ModelCoef.getNumberOfRows()/2);
     arx = new ModelHandler::ARX<double>(0,ModelCoef.getNumberOfRows());
     arx->setModelCoef(ModelCoef);
