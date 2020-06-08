@@ -316,7 +316,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
     }
     else{
         r0 = -ModelCoef(0,0)/2 +sqrt(delta)/2;
-        r1 = -ModelCoef(0,0)/2 -sqrt(-delta)/2;
+        r1 = -ModelCoef(0,0)/2 -sqrt(delta)/2;
     }
 
     std::cout << arx->print() << std::endl << "Raiz1: " << r0 << "  " << i0 << std::endl<< "Raiz2: " << r1 << "  " << i1 << std::endl;
