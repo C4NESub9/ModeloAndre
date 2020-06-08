@@ -309,7 +309,7 @@ LinAlg::Matrix<double> predicao(std::string matrixIn, std::string matrixOut, dou
 
     LinAlg::Matrix<double> data = (~(estOutput(0,from(1)-->counter-1)))|((~(Output(0,from(0)-->counter-2)))|(~(Output(0,from(0)-->counter-2)-estOutput(0,from(1)-->counter-1))));
     //std::cout << data << std::endl;
-    double delta = pow(ModelCoef(0,0),2)-4*ModelCoef(0,1),r0,i0 = 0,r1,i1 = 0;
+    double delta = pow(ModelCoef(0,0),2)-4*ModelCoef(1,0),r0,i0 = 0,r1,i1 = 0;
     if(delta<0){
         r0 = -ModelCoef(0,0)/2; i0 = sqrt(-delta)/2;
         r1 = -ModelCoef(0,0)/2; i1 = -sqrt(-delta)/2;
