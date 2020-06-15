@@ -279,7 +279,7 @@ def getAllData(filename_src,file,population,filename_srcPredictions):
     letalidade = [OA[0],[(i / (1+j)) *100 for i, j in zip(OA[1], CA[1])]] 
     incidencia = [CN[0],[(i / population) *100000 for i in CN[1] ]]
     popContaminada = [CA[0],[(i / population) *100 for i in CA[1]]]
-    mortalidade = [ON[0],[(i / population) *100000 for i in ON[1] ]]
+    #mortalidade = [ON[0],[(i / population) *100000 for i in ON[1] ]]
     taxaCrescimento = [CN[0],[(i /(1+j)) *100 for i, j in zip(CN[1], CA[1])] ]
     fatorCrescimento = [CN[0][0:len(CN)-1],[(i / (1+j)) *100 for i, j in zip(CN[1][1:len(CN[1])], CN[1][0:len(CN[1])-1])]]
     acumulatedData.setdefault(file,[]).append ([OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,taxaCrescimento,fatorCrescimento,CAP,OAP,CAP50,OAP50,CAP60,OAP60,CAP75,OAP75]) 
@@ -530,10 +530,11 @@ def geracaoPorEstado(region,stateListFile,stateList,data,Titulos,yLabel):
     select = Div(text=selecaoHTML)
     selectmunicipio = Div(text=selecaoMunicipiosHTML)
     selectRegiao = Div(text=selecaoRegiaoHTML)
-    l=grid([[select, selectmunicipio,selectRegiao],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
+    l=grid([[select, selectmunicipio,selectRegiao],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4]],[plot[5], plot[6]],[plot[7], plot[8]],[Paragraph(text= predictionObservations)],[plot[9], plot[10]],[plot[11], plot[12]],[plot[13], plot[14]],[plot[15], plot[16]], [plot[17]]])
+    #l=grid([[select, selectmunicipio,selectRegiao],[plot[0], plot[1]],[plot[2], plot[3]],[plot[4], plot[5]],[plot[6], plot[7]],[plot[8], plot[9]],[Paragraph(text= predictionObservations)],[plot[10], plot[11]],[plot[12], plot[13]],[plot[14], plot[15]],[plot[16], plot[17]], [plot[18]]])
     show(l)
 
-
+'''
 acumulatedData = dict()
 conjuntodePlots = list()
 for i in zip(stateListFile,stateList): 
@@ -545,6 +546,9 @@ for i in zip(stateListFile,stateList):
 
     casosAcumuladosComp     = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'CA'+i[0],"Casos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
     obitosAcumuladosComp    = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'OA'+i[0],"Óbitos Acumulados no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
+    casosNovosComp          = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'CN'+i[0],"Casos Novos no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Casos Acumulados")
+    obitosNovosComp         = comparacoCenarios('D:/Projetos/googleData/dataAn/'+'ON'+i[0],"Óbitos Novos no Estado " + i[1] + '(Projeção com Taxa de Isolamento)',"Óbitos Acumulados")
+    
     letalidade              = Letalidade('D:/Projetos/googleData/data/',i[0],"Evolução da Letalidade no estado " + i[1],"Letalidade em porcentagens")
     incidencia              = Incidencia('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução da Incidência no Estado ' + i[1], 'Incidência')
     percentPopulContaminada = PercentPopulContaminada('D:/Projetos/googleData/data/',i[0], statelist2Population(i[0]), 'Evolução da Percentual da População Contaminada no Estado ' + i[1], 'População Contaminada')
@@ -555,7 +559,7 @@ for i in zip(stateListFile,stateList):
     obtosAcumulados         = ObitosAcumulados('D:/Projetos/googleData/data/',i[0], 'Evolução de Óbitos Acumulados no Estado ' + i[1], 'Óbitos Acumulados')
     taxadeCrescimento       = TaxadeCrescimento('D:/Projetos/googleData/data/',i[0],"Evolução da Taxa de Crescimento no estado " + i[1], 'Taxa de Crescimento')
     fatordeCrescimento      = FatordeCrescimento('D:/Projetos/googleData/data/',i[0], 'Evolução do Fator de Crescimento no Estado ' + i[1], 'Fator de Crescimetno')
-    mobilidade              = Mobilidade('D:/Projetos/googleData/data/',i[0], "Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) no Estado ",'Mobilidade Residencial')
+    #mobilidade              = Mobilidade('D:/Projetos/googleData/data/',i[0], "Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) no Estado ",'Mobilidade Residencial')
     acumulatedData[i[0]]    = getAllData('D:/Projetos/googleData/data/',i[0],statelist2Population(i[0]),'D:/Projetos/googleData/dataAn/')[i[0]]
     
     paragraph1 = Paragraph(text="Casos Acumulados = " + "{:.{}f}".format(toPainel['CasosAcumulados'][0],4))
@@ -575,10 +579,11 @@ for i in zip(stateListFile,stateList):
     [paragraph1,paragraph2,paragraph3,paragraph4,paragraph5],
     [paragraph6,paragraph7,paragraph8,paragraph9,paragraph10],
     [casosAcumuladosComp, obitosAcumuladosComp],
+    [casosNovosComp, obitosNovosComp],
     [paragraphOBS],
     [casosAcumulados, obtosAcumulados],
     [casosNovos, obtosNovos],
-    [mobilidade],
+    #[mobilidade],
     [letalidade, incidencia],
     [percentPopulContaminada,mortalidade],
     [taxadeCrescimento,fatordeCrescimento]
@@ -590,7 +595,7 @@ Titulos = [ #OA,CA,CN,ON,GDM,letalidade,incidencia,popContaminada,mortalidade,ta
     "Evolução de Casos Acumulados nos Estados do ",
     'Evolução de Casos Novos nos Estados do ',
     'Evolução de Óbitos Novos nos Estados do ',
-    "Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) nos Estados",
+    #"Tendência de mobilidade para Espaços Residenciais (0 Representa a Média) nos Estados",
     "Evolução da Letalidade nos Estados do ",
     'Evolução da Incidência nos Estados do ',
     'Evolução da Percentual da População Contaminada nos Estados do ',
@@ -612,7 +617,7 @@ yLabel = [
     "Casos Acumulados",
     'Casos Novos',
     'Óbitos Novos',
-    'Mobilidade Residencial',
+    #'Mobilidade Residencial',
     "Letalidade",
     'Incidência',
     'População Contaminada',
@@ -666,7 +671,7 @@ for j in zip(municipiosFileList,municipiosList, range(len(municipiosList)-1)):
         show(l)
 
 
-
+'''
 #Regioes de Saude
 # datas estão começando erradas das predições
 acumulatedData = dict()

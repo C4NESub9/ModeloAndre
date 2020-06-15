@@ -24,3 +24,6 @@ df = pd.read_excel(csv_file)
 today_date_str = "".join(str(datetime.now().date()).split("-"))
 downloadPath = "./dataRaw/"
 df.to_csv(downloadPath+"Brasil_COVID19-" + today_date_str + ".csv", index=False)
+
+
+

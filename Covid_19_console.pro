@@ -31,6 +31,7 @@ HEADERS += \
     SistemasdeControle/src/modelLibs/statespace.hpp \
     SistemasdeControle/src/modelLibs/transferfunction.hpp \
     SistemasdeControle/src/optimizationLibs/leastsquare.hpp \
+    SistemasdeControle/src/optimizationLibs/pso.hpp \
     SistemasdeControle/src/optimizationLibs/recursiveleastsquare.hpp \
     SistemasdeControle/src/primitiveLibs/LinAlg/linalg.hpp \
     SistemasdeControle/src/primitiveLibs/LinAlg/matrix.hpp \

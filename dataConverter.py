@@ -331,6 +331,23 @@ for i in municipioListPI:
 for i in municipioListMA:
     runMunicipios(i, 'MA')
 
+
 NElist = ['RN','PB','BA','SE','AL','MA','PE','CE','PI']
+SElist = ['MG','ES','RJ','SP']
+Nlist = ['RO','AC','AM','RR','PA','AP','TO']
+Slist = ['PR','SC','RS']
+COlist = ['MS','GO','MT']
 for i in NElist:
     runRegioesSaude('Nordeste','NE',i)
+
+for i in Nlist:
+    runRegioesSaude('Norte','N',i)
+
+for i in Slist:
+    runRegioesSaude('Sul','S',i)
+
+for i in SElist:
+    runRegioesSaude('Suldeste','SE',i)
+
+for i in COlist:
+    runRegioesSaude('Centro-Oeste','CO',i)
