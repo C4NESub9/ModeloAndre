@@ -5,20 +5,20 @@ import shutil
 
 #https://transparencia.registrocivil.org.br/registros fazer comparação de mortes
 
-#   src = 'C:/Users/andre/Downloads/Global_Mobility_Report.csv'
+#src = 'C:/Users/andre/Downloads/Global_Mobility_Report.csv'
 src = '/home/travis/Downloads/Global_Mobility_Report.csv'
 dest = './dataRaw/'
 filename_dest = './data/'
 
 def CasosToNum(shortMonth):
     return{
-        'date' : 4,
-        'retail_and_recreation_percent_change_from_baseline' : 5,
-        'grocery_and_pharmacy_percent_change_from_baseline': 6,
-        'parks_percent_change_from_baseline' : 7,
-        'transit_stations_percent_change_from_baseline' : 8,
-        'workplaces_percent_change_from_baseline': 9,
-        'residential_percent_change_from_baseline': 10
+        'date' : 6,
+        'retail_and_recreation_percent_change_from_baseline' : 7,
+        'grocery_and_pharmacy_percent_change_from_baseline': 8,
+        'parks_percent_change_from_baseline' : 9,
+        'transit_stations_percent_change_from_baseline' : 10,
+        'workplaces_percent_change_from_baseline': 11,
+        'residential_percent_change_from_baseline': 12
     }[shortMonth]
 
 def splitData(filename_src,columnData):
