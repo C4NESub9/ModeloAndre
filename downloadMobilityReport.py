@@ -5,7 +5,7 @@ import shutil
 
 #https://transparencia.registrocivil.org.br/registros fazer comparação de mortes
 
-#src = 'C:/Users/andre/Downloads/Global_Mobility_Report.csv'
+#   src = 'C:/Users/andre/Downloads/Global_Mobility_Report.csv'
 src = '/home/travis/Downloads/Global_Mobility_Report.csv'
 dest = './dataRaw/'
 filename_dest = './data/'
