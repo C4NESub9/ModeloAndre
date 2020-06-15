@@ -382,7 +382,8 @@ LinAlg::Matrix<Type> LinAlg::Matrix<Type>::size () const
 template<typename Type>
 Type& LinAlg::Matrix<Type>::operator() (int row, int column)
 {
-    return this->mat[row][column];
+    if(mat)
+        return this->mat[row][column];
 }
 
 template<typename Type>

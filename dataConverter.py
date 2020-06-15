@@ -341,10 +341,10 @@ for i in NElist:
     runRegioesSaude('Nordeste','NE',i)
 
 for i in Nlist:
-    runRegioesSaude('Norte','N',i)
+    runRegioesSaude('Norte','NO',i)
 
 for i in Slist:
-    runRegioesSaude('Sul','S',i)
+    runRegioesSaude('Sul','SU',i)
 
 for i in SElist:
     runRegioesSaude('Sudeste','SE',i)
