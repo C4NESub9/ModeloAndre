@@ -347,7 +347,7 @@ for i in Slist:
     runRegioesSaude('Sul','S',i)
 
 for i in SElist:
-    runRegioesSaude('Suldeste','SE',i)
+    runRegioesSaude('Sudeste','SE',i)
 
 for i in COlist:
     runRegioesSaude('Centro-Oeste','CO',i)
